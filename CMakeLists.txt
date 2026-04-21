@@ -24,6 +24,10 @@ endif()
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 
 CPMAddPackage("gh:hiimjasmine00/jasmine-tools@1.5.0")
+# StringBuffer is a template alias in Geode 5.x — CTAD doesn't apply, needs explicit <>
+file(READ "${jasmine-tools_SOURCE_DIR}/include/jasmine/search.hpp" _search_hpp)
+string(REPLACE "StringBuffer searchQuery" "StringBuffer<> searchQuery" _search_hpp "${_search_hpp}")
+file(WRITE "${jasmine-tools_SOURCE_DIR}/include/jasmine/search.hpp" "${_search_hpp}")
 target_link_libraries(${PROJECT_NAME} jasmine-tools)
 
 setup_geode_mod(${PROJECT_NAME})

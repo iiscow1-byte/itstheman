@@ -1,35 +1,99 @@
-C:\Users\mdime\Documents\itstheman\src\classes\IDListLayer.cpp(2,10): error C1083: Cannot open include file: '../In
-tegratedMSCL.hpp': No such file or directory [C:\Users\mdime\Documents\itstheman\build\IntegratedDemonlist.vcxproj]
-  IDPackLayer.cpp
-C:\Users\mdime\Documents\itstheman\src\classes\IDPackLayer.cpp(227,10): error C2653: 'IntegratedMSCL': is not a cla
-ss or namespace name [C:\Users\mdime\Documents\itstheman\build\IntegratedDemonlist.vcxproj]
-C:\Users\mdime\Documents\itstheman\src\classes\IDPackLayer.cpp(227,26): error C2065: 'aredlPacks': undeclared ident
-ifier [C:\Users\mdime\Documents\itstheman\build\IntegratedDemonlist.vcxproj]
-C:\Users\mdime\Documents\itstheman\src\classes\IDPackLayer.cpp(231,9): error C2653: 'IntegratedMSCL': is not a clas
-s or namespace name [C:\Users\mdime\Documents\itstheman\build\IntegratedDemonlist.vcxproj]
-C:\Users\mdime\Documents\itstheman\src\classes\IDPackLayer.cpp(231,25): error C3861: 'loadAREDLPacks': identifier n
-ot found [C:\Users\mdime\Documents\itstheman\build\IntegratedDemonlist.vcxproj]
-C:\Users\mdime\Documents\itstheman\src\classes\IDPackLayer.cpp(253,5): error C2653: 'IntegratedMSCL': is not a clas
-s or namespace name [C:\Users\mdime\Documents\itstheman\build\IntegratedDemonlist.vcxproj]
-C:\Users\mdime\Documents\itstheman\src\classes\IDPackLayer.cpp(253,21): error C3861: 'loadAREDLPacks': identifier n
-ot found [C:\Users\mdime\Documents\itstheman\build\IntegratedDemonlist.vcxproj]
-C:\Users\mdime\Documents\itstheman\src\classes\IDPackLayer.cpp(294,31): error C2653: 'IntegratedMSCL': is not a cla
-ss or namespace name [C:\Users\mdime\Documents\itstheman\build\IntegratedDemonlist.vcxproj]
-C:\Users\mdime\Documents\itstheman\src\classes\IDPackLayer.cpp(294,47): error C2065: 'aredlPacks': undeclared ident
-ifier [C:\Users\mdime\Documents\itstheman\build\IntegratedDemonlist.vcxproj]
-C:\Users\mdime\Documents\itstheman\src\classes\IDPackLayer.cpp(299,27): error C2653: 'IntegratedMSCL': is not a cla
-ss or namespace name [C:\Users\mdime\Documents\itstheman\build\IntegratedDemonlist.vcxproj]
-C:\Users\mdime\Documents\itstheman\src\classes\IDPackLayer.cpp(299,20): error C2530: 'pack': references must be ini
-tialized [C:\Users\mdime\Documents\itstheman\build\IntegratedDemonlist.vcxproj]
-C:\Users\mdime\Documents\itstheman\src\classes\IDPackLayer.cpp(299,20): error C3531: 'pack': a symbol whose type co
-ntains 'auto' must have an initializer [C:\Users\mdime\Documents\itstheman\build\IntegratedDemonlist.vcxproj]
-C:\Users\mdime\Documents\itstheman\src\classes\IDPackLayer.cpp(299,25): error C2143: syntax error: missing ';' befo
-re ':' [C:\Users\mdime\Documents\itstheman\build\IntegratedDemonlist.vcxproj]
-C:\Users\mdime\Documents\itstheman\src\classes\IDPackLayer.cpp(299,43): error C2065: 'aredlPacks': undeclared ident
-ifier [C:\Users\mdime\Documents\itstheman\build\IntegratedDemonlist.vcxproj]
-C:\Users\mdime\Documents\itstheman\src\classes\IDPackLayer.cpp(299,53): error C2143: syntax error: missing ';' befo
-re ')' [C:\Users\mdime\Documents\itstheman\build\IntegratedDemonlist.vcxproj]
-C:\Users\mdime\Documents\itstheman\src\classes\IDPackLayer.cpp(347,9): error C2653: 'IntegratedMSCL': is not a clas
-s or namespace name [C:\Users\mdime\Documents\itstheman\build\IntegratedDemonlist.vcxproj]
-C:\Users\mdime\Documents\itstheman\src\classes\IDPackLayer.cpp(347,25): error C3861: 'loadAREDLPacks': identifier n
-ot found [C:\Users\mdime\Documents\itstheman\build\IntegratedDemonlist.vcxproj]
+01:32:14 INFO  [Main] [Geode]: Running Geode v5.6.1 in Geometry Dash v2.2081 on Windows
+01:32:14 INFO  [Main] [Geode]: Loader commit: 337aeeb, Bindings commit: 73c37ae9
+01:32:14 INFO  [Main] [Geode]: Setting up internal mod
+01:32:14 INFO  [Main] [Geode]: Setting up loader
+01:32:14 INFO  [Main] [Geode]:   Loading launch arguments
+01:32:14 INFO  [Main] [Geode]:   Setting up crash handler
+01:32:14 INFO  [Main] [Geode]:   Loading hooks
+01:32:14 INFO  [Main] [Geode]:   Setting up directories
+01:32:14 INFO  [Main] [Geode]:   Refreshing mod graph
+01:32:14 INFO  [Main] [Geode]:     Queueing mods
+01:32:14 INFO  [Main] [Geode]:     Populating mod list
+01:32:14 WARN  [Main] [Geode]:         Failed to parse keybind "" for setting 'sounds-everywhere-toggle-keybind': Invalid key ''
+01:32:14 WARN  [Main] [Geode]:         Failed to parse keybind "" for setting 'clicks-toggle-keybind': Invalid key ''
+01:32:14 WARN  [Main] [Geode]:         Failed to parse keybind "" for setting 'releases-toggle-keybind': Invalid key ''
+01:32:14 INFO  [Main] [Geode]:     Building mod graph
+01:32:14 INFO  [Main] [Geode]:     Ordering mod stack
+01:32:14 INFO  [Main] [Geode]:     Loading early mods
+01:32:14 INFO  [Main] [Geode]:       Loading mod geode.node-ids v1.23.3
+01:32:14 INFO  [Main] [Geode]:       Loading mod cvolton.misc_bugfixes v1.10.1
+01:32:14 INFO  [Main] [Geode]:       Loading mod cvolton.level-id-api v2.0.0
+01:32:14 INFO  [Main] [Geode]:       Loading mod cvolton.betterinfo v4.4.5
+01:32:14 INFO  [Main] [Geode]:       Loading mod eclipse.eclipse-menu v1.9.3
+01:32:14 WARN  [Main] [Geode]:         CustomButton contains unknown key "default"
+01:32:14 INFO  [Main] [Eclipse]:       Checking for language updates...
+01:32:14 INFO  [Main] [Eclipse]:       TPS Bypass: Patch enabled at offset 0x237A5B
+01:32:14 WARN  [Main] [Eclipse]:       Keybind with ID '' not found
+01:32:14 INFO  [Main] [Eclipse]:       Initializing Discord RPC
+01:32:14 WARN  [Main] [Eclipse]:       Keybind with ID '' not found
+01:32:14 WARN  [Main] [Eclipse]:       Keybind with ID '' not found
+01:32:14 WARN  [Main] [Eclipse]:       Keybind with ID '' not found
+01:32:14 WARN  [Main] [Eclipse]:       Keybind with ID '' not found
+01:32:14 INFO  [Main] [Eclipse]:       Added bitmap fonts to search path: C:\Program Files (x86)\Steam\steamapps\common\Geometry Dash\geode\config\eclipse.eclipse-menu\bmfonts
+01:32:14 INFO  [Main] [Geode]:       Loading mod prevter.imageplus v1.1.0
+01:32:14 INFO  [Main] [Geode]: Starting loader update check
+01:32:14 INFO  [Main] [Geode]: Entry took 0.301s
+01:32:15 INFO  [Main] [Geode]: Loading non-early mods
+01:32:15 INFO  [Main] [Geode]:   Loading mod alphalaneous.editortab_api v2.1.5
+01:32:15 INFO  [Main] [Geode]: Latest Geode version is v5.6.1
+01:32:15 INFO  [Eclipse]: Discord RPC ready: gerg4495
+01:32:15 INFO  [Main] [Geode]:   Loading mod alphalaneous.improved_song_browser v1.1.0
+01:32:15 INFO  [Main] [Geode]:   Loading mod beat.click-sound v2.4.9
+01:32:15 INFO  [Main] [Geode]:   Loading mod dankmeme.globed2 v2.1.4
+01:32:15 INFO  [Main] [Globed]:    Globed loaded, commit: 790182b8f3771c459da7b433cf3d183ddb3f794e, Geode: 337aeeb355c990291a5ee13508f152dc0cde9875
+01:32:15 INFO  [Main] [Geode]:   Loading mod elohmrow.death_tracker v2.4.8
+01:32:16 INFO  [Main] [Geode]:   Loading mod firee.goldenbest v1.1.3
+01:32:16 INFO  [Main] [Geode]:   Loading mod fleym.nongd v3.6.2
+01:32:16 INFO  [Main] [Jukebox]:   Starting NONG read
+01:32:16 INFO  [Main] [Jukebox]:   Read 5 files successfully!
+01:32:16 INFO  [Main] [Jukebox]:   Nothing to migrate from V2!
+01:32:16 INFO  [arc-worker-1] [Jukebox]: Starting fetch for index https://raw.githubusercontent.com/FlafyDev/auto-nong-indexes/v2/auto-nong-index.min.json
+01:32:16 INFO  [Main] [Geode]:   Loading mod geode.custom-keybinds v2.1.0
+01:32:16 INFO  [arc-worker-2] [Jukebox]: Fetched index: https://raw.githubusercontent.com/FlafyDev/auto-nong-indexes/v2/auto-nong-index.min.json
+01:32:16 INFO  [arc-worker-2] [Jukebox]: Cached index: https://raw.githubusercontent.com/FlafyDev/auto-nong-indexes/v2/auto-nong-index.min.json
+01:32:16 INFO  [arc-worker-2] [Jukebox]: Starting fetch for index https://raw.githubusercontent.com/FlafyDev/auto-nong-indexes/v2/sfh-index.min.json
+01:32:16 INFO  [Main] [Geode]:   Loading mod glow12.groupshift v1.2.2
+01:32:16 INFO  [Main] [Geode]:   Loading mod hiimjustin000.integrated_demonlist v1.7.13
+01:32:16 INFO  [arc-worker-2] [Jukebox]: Fetched index: https://raw.githubusercontent.com/FlafyDev/auto-nong-indexes/v2/sfh-index.min.json
+01:32:17 INFO  [arc-worker-2] [Jukebox]: Cached index: https://raw.githubusercontent.com/FlafyDev/auto-nong-indexes/v2/sfh-index.min.json
+01:32:17 INFO  [Main] [Geode]:   Loading mod hjfod.backups v2.1.1
+01:32:17 INFO  [Main] [Geode]:   Loading mod hjfod.gmd-api v1.5.0
+01:32:17 INFO  [Main] [Geode]:   Loading mod hjfod.betteredit v6.10.0-beta.6
+01:32:17 INFO  [Main] [Geode]:   Loading mod hjfod.trashcan v1.2.1
+01:32:17 INFO  [Main] [Geode]:   Loading mod ninkaz.editor_utils v1.5.4
+01:32:17 INFO  [Main] [Geode]:   Loading mod nwo5.better_editor_trail v3.0.0
+01:32:17 INFO  [Main] [Geode]:   Loading mod razoom.object_groups v2.1.8
+01:32:17 INFO  [Main] [Geode]:   Loading mod syzzi.click_between_frames v1.5.0
+01:32:17 INFO  [M>] [Click Betw>]: Precision fix patch: [73, 185, 0, 0, 116, 144, 171, 1, 0, 0, 65, 255, 225] at 0x7ffdeee336f6
+01:32:17 INFO  [M>] [Click Betw>]: Delta fix patch: [144, 144, 144, 242, 15, 94, 209, 144, 144, 144, 144] at 0x7ffdeee33716
+01:32:17 INFO  [M>] [Click Betw>]: Physics bypass patch: [72, 185, 152, 31, 239, 252, 253, 127, 0, 0, 68, 139, 25] at 0x7ff76a847a91
+01:32:17 INFO  [Main] [Geode]:   Loading mod techstudent10.discord_rich_presence v4.1.1
+01:32:17 INFO  [Main] [Geode]:   Loading mod zhulis.blitzkrieg v2.2.1
+01:32:17 INFO  [Main] [Geode]:   Finding problems
+01:32:18 INFO  [Discord Rich Presence]: connected to user gerg4495#0 (user id: 470019535588687873)
+01:32:19 INFO  [Main] [Globed]: PreloadManager: available system memory: 34339 MB
+01:32:19 INFO  [Main] [Globed]: PreloadManager: initialized session state in 2.002ms
+01:32:19 INFO  [Main] [Globed]: PBO support: yes, tex storage: yes, parsed version: 4.6
+01:32:19 INFO  [Main] [Globed]: OpenGL version: 4.6.0 NVIDIA 581.80
+01:32:19 INFO  [Main] [Globed]: Asset preloading finished in 274.626ms
+01:32:19 INFO  [Main] [Backups]: Fixing nested backups...
+01:32:19 INFO  [arc-worker-1] [Globed]: central connection state: DnsResolving
+01:32:19 INFO  [Main] [Misc Bugfixes]: Cleaning up uninstalled mods...
+01:32:19 INFO  [Main] [Misc Bugfixes]: Finished cleaning up uninstalled mods
+01:32:19 INFO  [Main] [Misc Bugfixes]: Adjusted collected orbs by: 0 (13299 -> 13299)
+01:32:19 INFO  [Main] [Misc Bugfixes]: Fetching important notices from: https://geometrydash.eu/mods/miscbugfixes/_api/importantNotices/?platform=Windows&version=v1.10.1&loader=v5.6.1&wine=&os=Windows%2010.0.19045&amazon=0
+01:32:19 INFO  [arc-worker-2] [Globed]: central connection state: Pinging
+01:32:19 INFO  [arc-worker-3] [Globed]: central connection state: Connecting
+01:32:19 INFO  [Main] [Geode]: All mods up to date!
+01:32:20 INFO  [arc-worker-2] [Globed]: central connection state: Connected
+01:32:20 INFO  [Main] [Misc Bugfixes]: Checking if v5.6.1 is older than v5.3.0
+01:32:23 WARN  [Main] [Geode]: CCSpriteFrameCache::spriteFrameByName - Using fallback texture for `hiimjustin000.integrated_demonlist/29.png`
+01:32:23 WARN  [Main] [Blitzkrieg]: Error while loading levels: 
+01:32:44 WARN  [Main] [Geode]: CCSpriteFrameCache::spriteFrameByName - Using fallback texture for `hiimjustin000.integrated_demonlist/29.png`
+01:32:44 WARN  [Main] [Blitzkrieg]: Error while loading levels: 
+01:37:35 INFO  [Main] [Backups]: Fixing nested backups...
+01:37:36 INFO  [Main] [Geode]: Saving mod data...
+01:37:36 INFO  [Main] [Geode]:   Took 0.05s
+01:37:36 INFO  [Main] [Geode]: Shutting down logger and async runtime..
+01:37:36 ERROR [Main] [Discord Rich Presence]: disconnected with error code 0 - message: 
+01:37:36 INFO  [Main] [Globed]: goodbye from networkmanager!

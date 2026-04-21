@@ -84,10 +84,10 @@ class $modify(IDLevelInfoLayer, LevelInfoLayer) {
 
         // Tier icon to the left of the difficulty sprite (classic list only)
         if (!platformer && tier >= 0) {
-            auto frameName = fmt::format("{}/{}.png", Mod::get()->getID(), tier);
-            auto tierSpr = CCSprite::createWithSpriteFrameName(frameName.c_str());
+            auto tierPath = (Mod::get()->getResourcesDir() / fmt::format("{}-uhd.png", tier)).string();
+            auto tierSpr = CCSprite::create(tierPath.c_str());
             if (tierSpr) {
-                tierSpr->setScale(0.9f);
+                tierSpr->setScale(4.5f / 4.0f);
                 tierSpr->setPosition({diffPos.x - diffHalfW - 34.0f, diffPos.y + 8.0f});
                 tierSpr->setID("demonlist-tier-icon"_spr);
                 parent->addChild(tierSpr, z);
@@ -95,9 +95,9 @@ class $modify(IDLevelInfoLayer, LevelInfoLayer) {
         }
 
         // Position label anchored just below the stars label
-        float rankY = diffPos.y - 60.0f;
+        float rankY = diffPos.y - 45.0f;
         if (m_starsLabel) {
-            rankY = m_starsLabel->getPositionY() - 14.0f;
+            rankY = m_starsLabel->getPositionY() - 0.0f;
         }
 
         auto rankLabel = CCLabelBMFont::create(
