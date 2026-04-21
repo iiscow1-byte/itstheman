@@ -1,0 +1,53 @@
+{
+    "geode": "5.0.0-beta.1",
+    "gd": {
+        "android": "2.2081",
+        "win": "2.2081",
+        "mac": "2.2081",
+        "ios": "2.2081"
+    },
+    "version": "v1.7.13",
+    "id": "hiimjustin000.integrated_demonlist",
+    "name": "Integrated Demonlist",
+    "developer": "hiimjasmine00",
+    "description": "Simple AREDL and Pemonlist integration.",
+    "resources": {
+        "files": [
+            "resources/*.frag",
+            "resources/*.vert"
+        ],
+        "sprites": [
+            "resources/*.png"
+        ]
+    },
+    "settings": {
+        "enable-rank": {
+            "name": "Enable Demon Ranking Text",
+            "description": "Whether or not to display the demon ranking text.",
+            "type": "bool",
+            "default": true
+        },
+        "white-rank": {
+            "name": "White Demon Ranking Text",
+            "description": "Whether or not to display the demon ranking text in white.",
+            "type": "bool",
+            "enable-if": "enable-rank",
+            "default": false
+        }
+    },
+    "dependencies": {
+        "geode.node-ids": ">=v1.9.0"
+    },
+    "links": {
+        "community": "https://discord.gg/QVKmbvBXA7",
+        "source": "https://github.com/hiimjasmine00/IntegratedDemonlist",
+        "homepage": "https://www.hiimjasmine00.com"
+    },
+    "tags": [
+        "content",
+        "enhancement",
+        "interface",
+        "online",
+        "utility"
+    ]
+}

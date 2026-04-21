@@ -1,0 +1,123 @@
+  unity_6_cxx.cxx
+  unity_5_cxx.cxx
+  unity_4_cxx.cxx
+  unity_3_cxx.cxx
+  unity_2_cxx.cxx
+  unity_1_cxx.cxx
+  unity_0_cxx.cxx
+  Generating Code...
+  GeodeBindings.vcxproj -> C:\Users\mdime\Documents\itstheman\build\bindings\RelWithDebInfo\GeodeBindings.lib
+  Building Custom Rule C:/Users/mdime/Documents/itstheman/CMakeLists.txt
+  IntegratedDemonlist.cpp
+  IDListLayer.cpp
+  IDPackCell.cpp
+C:\Users\mdime\Documents\itstheman\build\_deps\jasmine-tools-src\include\jasmine\search.hpp(10,36): error C2641: ca
+nnot deduce template arguments for 'geode::utils::StringBuffer' [C:\Users\mdime\Documents\itstheman\build\Integrate
+dDemonlist.vcxproj]
+  (compiling source file '../src/classes/IDListLayer.cpp')
+      C:\Users\mdime\Documents\itstheman\build\_deps\jasmine-tools-src\include\jasmine\search.hpp(10,36):
+      the template instantiation context (the oldest one first) is
+          C:\Users\mdime\Documents\itstheman\src\classes\IDListLayer.cpp(384,46):
+          see reference to function template instantiation 'GJSearchObject *jasmine::search::getObject<std::_Vector
+  _iterator<std::_Vector_val<std::_Simple_types<_Ty>>>,std::_Vector_iterator<std::_Vector_val<std::_Simple_types<_T
+  y>>>,std::identity>(It,Sent,Func)' being compiled
+          with
+          [
+              _Ty=std::string,
+              It=std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::string>>>,
+              Sent=std::_Vector_iterator<std::_Vector_val<std::_Simple_types<std::string>>>,
+              Func=std::identity
+          ]
+
+C:\Users\mdime\Documents\itstheman\build\_deps\jasmine-tools-src\include\jasmine\search.hpp(10,36): error C2641: ca
+nnot deduce template arguments for 'geode::utils::StringBuffer' [C:\Users\mdime\Documents\itstheman\build\Integrate
+dDemonlist.vcxproj]
+  (compiling source file '../src/classes/IDPackCell.cpp')
+      C:\Users\mdime\Documents\itstheman\build\_deps\jasmine-tools-src\include\jasmine\search.hpp(10,36):
+      the template instantiation context (the oldest one first) is
+          C:\Users\mdime\Documents\itstheman\src\classes\IDPackCell.cpp(134,51):
+          see reference to function template instantiation 'GJSearchObject *jasmine::search::getObject<std::span<co
+  nst int,18446744073709551615>&,std::string(__cdecl *)(T)>(Rng,Func)' being compiled
+          with
+          [
+              T=int,
+              Rng=std::span<const int,18446744073709551615> &,
+              Func=std::string (__cdecl *)(int)
+          ]
+          C:\Users\mdime\Documents\itstheman\build\_deps\jasmine-tools-src\include\jasmine\search.hpp(22,16):
+          see reference to function template instantiation 'GJSearchObject *jasmine::search::getObject<std::_Span_i
+  terator<_Ty>,std::_Span_iterator<_Ty>,std::string(__cdecl *)(T)>(It,Sent,Func)' being compiled
+          with
+          [
+              _Ty=const int,
+              T=int,
+              It=std::_Span_iterator<const int>,
+              Sent=std::_Span_iterator<const int>,
+              Func=std::string (__cdecl *)(int)
+          ]
+
+  IDPackLayer.cpp
+  LevelBrowserLayer.cpp
+  LevelCell.cpp
+C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(98,22): error C2641: cannot deduce template arguments fo
+r 'geode::utils::StringBuffer' [C:\Users\mdime\Documents\itstheman\build\IntegratedDemonlist.vcxproj]
+C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(107,9): error C3536: 'rankTextNode': cannot be used befo
+re it is initialized [C:\Users\mdime\Documents\itstheman\build\IntegratedDemonlist.vcxproj]
+C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(125,29): error C2665: 'cocos2d::CCNode::setPosition': no
+ overloaded function could convert all the argument types [C:\Users\mdime\Documents\itstheman\build\IntegratedDemon
+list.vcxproj]
+      C:\Users\mdime\Documents\Geode\loader\include\Geode\cocos\base_nodes\CCNode.h(318,18):
+      could be 'void cocos2d::CCNode::setPosition(const cocos2d::CCPoint &)'
+          C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(125,29):
+          'void cocos2d::CCNode::setPosition(const cocos2d::CCPoint &)': cannot convert argument 1 from 'initialize
+  r list' to 'const cocos2d::CCPoint &'
+              C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(125,41):
+              Reason: cannot convert from 'initializer list' to 'const cocos2d::CCPoint'
+              C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(125,41):
+              'cocos2d::CCPoint::CCPoint': no overloaded function could convert all the argument types
+                  C:\Users\mdime\Documents\Geode\loader\include\Geode\cocos\cocoa\CCGeometry.h(63,5):
+                  could be 'cocos2d::CCPoint::CCPoint(const cocos2d::CCPoint &)'
+                      C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(125,41):
+                      'cocos2d::CCPoint::CCPoint(const cocos2d::CCPoint &)': cannot convert argument 1 from 'float'
+   to 'const cocos2d::CCPoint &'
+                          C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(127,31):
+                          Reason: cannot convert from 'float' to 'const cocos2d::CCPoint'
+                  C:\Users\mdime\Documents\Geode\loader\include\Geode\cocos\cocoa\CCGeometry.h(414,20):
+                  or       'cocos2d::CCPoint::CCPoint(const cocos2d::CCSize &)'
+                      C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(125,41):
+                      'cocos2d::CCPoint::CCPoint(const cocos2d::CCSize &)': cannot convert argument 1 from 'float'
+  to 'const cocos2d::CCSize &'
+                          C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(127,31):
+                          Reason: cannot convert from 'float' to 'const cocos2d::CCSize'
+                          C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(127,31):
+                          'cocos2d::CCSize::CCSize': no overloaded function could convert all the argument types
+                              C:\Users\mdime\Documents\Geode\loader\include\Geode\cocos\cocoa\CCGeometry.h(324,5):
+                              could be 'cocos2d::CCSize::CCSize(const cocos2d::CCSize &)'
+                                  C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(127,31):
+                                  'cocos2d::CCSize::CCSize(const cocos2d::CCSize &)': cannot convert argument 1 fro
+  m 'float' to 'const cocos2d::CCSize &'
+                                      C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(127,31):
+                                      Reason: cannot convert from 'float' to 'const cocos2d::CCSize'
+                                      C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(127,31):
+                                      Conversion requires a second user-defined-conversion operator or constructor
+                              C:\Users\mdime\Documents\Geode\loader\include\Geode\cocos\cocoa\CCGeometry.h(328,5):
+                              or       'cocos2d::CCSize::CCSize(const cocos2d::CCPoint &)'
+                                  C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(127,31):
+                                  'cocos2d::CCSize::CCSize(const cocos2d::CCPoint &)': cannot convert argument 1 fr
+  om 'float' to 'const cocos2d::CCPoint &'
+                                      C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(127,31):
+                                      Reason: cannot convert from 'float' to 'const cocos2d::CCPoint'
+                                      C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(127,31):
+                                      Conversion requires a second user-defined-conversion operator or constructor
+                              C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(127,31):
+                              while trying to match the argument list '(float)'
+                  C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(125,41):
+                  while trying to match the argument list '(float)'
+      C:\Users\mdime\Documents\itstheman\src\hooks\LevelCell.cpp(125,29):
+      while trying to match the argument list '(initializer list)'
+
+  LevelSearchLayer.cpp
+  jasmine.cpp
+  entry.cpp
+  Generating Code...
+| Fail | CMake build returned code 1
