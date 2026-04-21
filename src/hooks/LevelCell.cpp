@@ -48,6 +48,7 @@ class $modify(IDLevelCell, LevelCell) {
                 if (!res.ok()) return;
 
                 int position1 = -1;
+                int tier1 = -1;
                 if (platformer) {
                     auto json = res.json();
                     if (!json.isOk()) return;
@@ -56,16 +57,19 @@ class $modify(IDLevelCell, LevelCell) {
                     position1 = pos.unwrap();
                     if (position1 > 150) return;
                 } else {
-                    for (auto& demon : jasmine::web::getArray(res)) {
-                        auto pos = demon.get<int>("position");
+                    for (auto& d : jasmine::web::getArray(res)) {
+                        auto pos = d.get<int>("position");
                         if (!pos.isOk()) continue;
                         position1 = pos.unwrap();
+                        auto t = d.get<int>("tier");
+                        if (t.isOk()) tier1 = t.unwrap();
                         break;
                     }
                     if (position1 == -1) return;
                 }
 
                 IDListDemon demon(levelID, position1, levelName);
+                demon.tier = tier1;
                 auto& list = platformer ? IntegratedDemonlist::pemonlist : IntegratedDemonlist::aredl;
                 if (!std::ranges::contains(list, demon)) {
                     list.push_back(std::move(demon));
@@ -88,7 +92,7 @@ class $modify(IDLevelCell, LevelCell) {
             positionsStr.append("#{}", *it);
         }
         if (m_level->isPlatformer()) positionsStr.append(" Pemonlist");
-        else positionsStr.append(" Demonlist");
+        else positionsStr.append(" MSCL");
 
         auto rankTextNode = CCLabelBMFont::create(positionsStr.c_str(), "chatFont.fnt");
         rankTextNode->setPosition({ 346.0f, dailyLevel ? 6.0f : 1.0f });

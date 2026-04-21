@@ -32,7 +32,7 @@ CCScene* IDListLayer::scene() {
 
 bool pemonlistEnabled = false;
 constexpr std::string_view aredlInfo =
-    "The <cg>Demonlist</c> is an <cp>unofficial ranking</c> "
+    "The <cg>MSCL</c> is an <cp>unofficial ranking</c> "
     "of <cj>classic mode</c> <cr>extreme demons</c> in Geometry Dash.";
 constexpr std::string_view pemonlistInfo =
     "The <cg>Pemonlist</c> is an <cp>unofficial ranking</c> of the top 150 <cj>platformer mode</c> <cr>demons</c> in Geometry Dash.\n"
@@ -74,7 +74,7 @@ bool IDListLayer::init() {
     m_countLabel->setID("level-count-label");
     addChild(m_countLabel);
 
-    m_list = GJListLayer::create(nullptr, pemonlistEnabled ? "Pemonlist" : "Demonlist", { 0, 0, 0, 180 }, 356.0f, 220.0f, 0);
+    m_list = GJListLayer::create(nullptr, pemonlistEnabled ? "Pemonlist" : "MSCL", { 0, 0, 0, 180 }, 356.0f, 220.0f, 0);
     m_list->setPosition(winSize / 2.0f - m_list->getContentSize() / 2.0f);
     m_list->setID("GJListLayer");
     addChild(m_list, 2);
@@ -133,14 +133,14 @@ bool IDListLayer::init() {
     m_rightButton->setID("next-page-button");
     menu->addChild(m_rightButton);
 
-    m_infoButton = InfoAlertButton::create(pemonlistEnabled ? "Pemonlist" : "Demonlist",
+    m_infoButton = InfoAlertButton::create(pemonlistEnabled ? "Pemonlist" : "MSCL",
         pemonlistEnabled ? gd::string(pemonlistInfo.data(), pemonlistInfo.size()) : gd::string(aredlInfo.data(), aredlInfo.size()), 1.0f);
     m_infoButton->setPosition({ 30.0f, 30.0f });
     m_infoButton->setID("info-button");
     menu->addChild(m_infoButton, 2);
 
     m_aredlFailure = [this](int code) {
-        FLAlertLayer::create(fmt::format("Load Failed ({})", code).c_str(), "Failed to load Demonlist. Please try again later.", "OK")->show();
+        FLAlertLayer::create(fmt::format("Load Failed ({})", code).c_str(), "Failed to load MSCL. Please try again later.", "OK")->show();
         m_loadingCircle->setVisible(false);
     };
 
@@ -280,10 +280,10 @@ void IDListLayer::onStar(CCObject* sender) {
     m_moonToggle->setColor({ 125, 125, 125 });
     showLoading();
     if (auto listTitle = static_cast<CCLabelBMFont*>(m_list->getChildByID("title"))) {
-        listTitle->setString("Demonlist");
+        listTitle->setString("MSCL");
         listTitle->limitLabelWidth(280.0f, 0.8f, 0.0f);
     }
-    m_infoButton->m_title = "Demonlist";
+    m_infoButton->m_title = "MSCL";
     m_infoButton->m_description = gd::string(aredlInfo.data(), aredlInfo.size());
     m_fullSearchResults.clear();
     if (IntegratedDemonlist::aredlLoaded) {

@@ -42,6 +42,8 @@ static void loadDemonlistPage(
 
                 lastPosition = position.unwrap();
                 IDListDemon demon(level_id.unwrap(), position.unwrap(), std::move(name).unwrap());
+                auto tierResult = level.get<int>("tier");
+                demon.tier = tierResult.isOk() ? tierResult.unwrap() : -1;
 
                 IntegratedDemonlist::aredl.insert(
                     std::ranges::upper_bound(IntegratedDemonlist::aredl, demon, [](const IDListDemon& a, const IDListDemon& b) {

@@ -13,7 +13,7 @@
 using namespace geode::prelude;
 
 constexpr std::string_view aredlPackInfo =
-    "The <cg>Demonlist</c> has <cp>packs</c> of <cr>extreme demons</c> that are <cj>related</c> in some way.\n"
+    "The <cg>MSCL</c> has <cp>packs</c> of <cr>extreme demons</c> that are <cj>related</c> in some way.\n"
     "If all levels in a pack are <cl>completed</c>, the pack can earn <cy>points</c>.";
 
 IDPackLayer* IDPackLayer::create() {
@@ -68,7 +68,7 @@ bool IDPackLayer::init() {
     m_countLabel->setID("level-count-label");
     addChild(m_countLabel);
 
-    m_list = GJListLayer::create(nullptr, "Demonlist Packs", { 0, 0, 0, 180 }, 356.0f, 220.0f, 0);
+    m_list = GJListLayer::create(nullptr, "MSCL Packs", { 0, 0, 0, 180 }, 356.0f, 220.0f, 0);
     m_list->setPosition(winSize / 2.0f - m_list->getContentSize() / 2.0f);
     m_list->setID("GJListLayer");
     addChild(m_list, 2);
@@ -125,13 +125,13 @@ bool IDPackLayer::init() {
     m_rightButton->setID("next-page-button");
     menu->addChild(m_rightButton);
 
-    auto infoButton = InfoAlertButton::create("Demonlist Packs", gd::string(aredlPackInfo.data(), aredlPackInfo.size()), 1.0f);
+    auto infoButton = InfoAlertButton::create("MSCL Packs", gd::string(aredlPackInfo.data(), aredlPackInfo.size()), 1.0f);
     infoButton->setPosition({ 30.0f, 30.0f });
     infoButton->setID("info-button");
     menu->addChild(infoButton, 2);
 
     m_aredlFailure = [this](int code) {
-        FLAlertLayer::create(fmt::format("Load Failed ({})", code).c_str(), "Failed to load Demonlist packs. Please try again later.", "OK")->show();
+        FLAlertLayer::create(fmt::format("Load Failed ({})", code).c_str(), "Failed to load MSCL packs. Please try again later.", "OK")->show();
         m_loadingCircle->setVisible(false);
     };
 

@@ -3,7 +3,12 @@
 struct IDListDemon {
     int id = 0;
     int position = 0;
+    int tier = -1;
     std::string name;
+
+    IDListDemon() = default;
+    IDListDemon(int id, int position, std::string name, int tier = -1)
+        : id(id), position(position), tier(tier), name(std::move(name)) {}
 
     bool operator==(const IDListDemon& other) const {
         return id == other.id && position == other.position;
