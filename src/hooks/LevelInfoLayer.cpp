@@ -100,10 +100,13 @@ class $modify(IDLevelInfoLayer, LevelInfoLayer) {
             }
         }
 
-        // Position label below the stars label if it exists
+        // Position label below the stars label (and coin row) if present
         float rankY = diffPos.y - 45.0f;
         if (m_starsLabel) {
             rankY = m_starsLabel->getPositionY() - m_starsLabel->getScaledContentHeight() - 2.0f;
+            if (m_level && m_level->m_coins > 0) {
+                rankY -= 14.0f;
+            }
         }
 
         const char* name = listName ? listName : (platformer ? "Pemonlist" : "MSCL");

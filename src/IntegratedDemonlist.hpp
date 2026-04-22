@@ -1,14 +1,23 @@
 #include <Geode/utils/web.hpp>
+#include <algorithm>
+#include <array>
+#include <cctype>
 
 struct IDListDemon {
     int id = 0;
     int position = 0;
     int tier = -1;
     std::string name;
+    std::string nameLower;
+    std::string idStr;
 
     IDListDemon() = default;
     IDListDemon(int id, int position, std::string name, int tier = -1)
-        : id(id), position(position), tier(tier), name(std::move(name)) {}
+        : id(id), position(position), tier(tier), name(name), idStr(std::to_string(id)) {
+        nameLower = this->name;
+        std::transform(nameLower.begin(), nameLower.end(), nameLower.begin(),
+            [](unsigned char c) { return std::tolower(c); });
+    }
 
     bool operator==(const IDListDemon& other) const {
         return id == other.id && position == other.position;
@@ -35,5 +44,5 @@ namespace IntegratedDemonlist {
     void loadAREDL(geode::async::TaskHolder<geode::utils::web::WebResponse>&, geode::Function<void()>, geode::CopyableFunction<void(int)>);
     void loadAREDLPacks(geode::async::TaskHolder<geode::utils::web::WebResponse>&, geode::Function<void()>, geode::CopyableFunction<void(int)>);
     void loadPemonlist(geode::async::TaskHolder<geode::utils::web::WebResponse>&, geode::Function<void()>, geode::CopyableFunction<void(int)>);
-    void loadAllList(geode::async::TaskHolder<geode::utils::web::WebResponse>&, geode::Function<void()>, geode::CopyableFunction<void(int)>);
+    void loadAllList(std::array<geode::async::TaskHolder<geode::utils::web::WebResponse>, 6>&, geode::Function<void()>, geode::CopyableFunction<void(int)>);
 }

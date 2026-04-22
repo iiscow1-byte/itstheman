@@ -17,7 +17,7 @@ public:
 protected:
     geode::async::TaskHolder<geode::utils::web::WebResponse> m_aredlListener;
     geode::async::TaskHolder<geode::utils::web::WebResponse> m_pemonlistListener;
-    geode::async::TaskHolder<geode::utils::web::WebResponse> m_allListListener;
+    std::array<geode::async::TaskHolder<geode::utils::web::WebResponse>, 6> m_allListListeners;
     GJListLayer* m_list;
     cocos2d::CCLabelBMFont* m_listLabel;
     LoadingCircle* m_loadingCircle;

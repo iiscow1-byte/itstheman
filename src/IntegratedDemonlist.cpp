@@ -157,60 +157,61 @@ static const std::array<const char*, 6> ALL_LIST_URLS = {
     "https://docs.google.com/spreadsheets/d/e/2PACX-1vQBDKoXQm4Zxzt_Fuv7WhdVhcTB80lsDCXqSYPMm62Ee2DJDHzhQScoxbp7Jj33OFgkPV9WEJlNyhML/pub?gid=1875166663&single=true&output=csv",
 };
 
-static void loadAllListPage(
-    TaskHolder<web::WebResponse>* listener,
-    int listIndex,
-    int nextPosition,
+void IntegratedDemonlist::loadAllList(
+    std::array<TaskHolder<web::WebResponse>, 6>& listeners,
     Function<void()> success,
     CopyableFunction<void(int)> failure
 ) {
-    if (listIndex >= 6) {
-        IntegratedDemonlist::allListLoaded = true;
-        success();
-        return;
-    }
-
-    listener->spawn(
-        web::WebRequest().userAgent("Mozilla/5.0").get(ALL_LIST_URLS[listIndex]),
-        [listener, listIndex, nextPosition, success = std::move(success), failure = std::move(failure)](web::WebResponse res) mutable {
-            if (!res.ok()) return failure(res.code());
-
-            auto textResult = res.string();
-            if (!textResult.isOk()) return failure(0);
-
-            int pos = nextPosition;
-            int row = 0;
-            std::istringstream stream(textResult.unwrap());
-            std::string line;
-            while (std::getline(stream, line)) {
-                ++row;
-                if (row <= 3) continue;
-
-                auto fields = parseCSVRow(line);
-                if (fields.size() < 6) continue;
-
-                auto& name = fields[1];
-                auto& tierStr = fields[3];
-                auto& idStr = fields[5];
-
-                if (name.empty() || idStr.empty()) continue;
-
-                int levelId = 0;
-                try { levelId = std::stoi(idStr); } catch (...) { continue; }
-                if (levelId == 0) continue;
-
-                int tier = parseTier(tierStr);
-                IntegratedDemonlist::allList.emplace_back(levelId, pos, name, tier);
-                ++pos;
-            }
-
-            loadAllListPage(listener, listIndex + 1, pos, std::move(success), std::move(failure));
-        }
-    );
-}
-
-void IntegratedDemonlist::loadAllList(TaskHolder<web::WebResponse>& listener, Function<void()> success, CopyableFunction<void(int)> failure) {
     allListLoaded = false;
     allList.clear();
-    loadAllListPage(&listener, 0, 1, std::move(success), std::move(failure));
+    allList.reserve(70000);
+
+    auto buffers = std::make_shared<std::array<std::string, 6>>();
+    auto remaining = std::make_shared<int>(6);
+    auto anyFailed = std::make_shared<bool>(false);
+    auto onDone = std::make_shared<Function<void()>>(std::move(success));
+
+    for (int i = 0; i < 6; ++i) {
+        listeners[i].spawn(
+            web::WebRequest().userAgent("Mozilla/5.0").get(ALL_LIST_URLS[i]),
+            [i, buffers, remaining, anyFailed, onDone, failure](web::WebResponse res) mutable {
+                if (*anyFailed) return;
+                if (!res.ok()) {
+                    *anyFailed = true;
+                    return failure(res.code());
+                }
+                auto textResult = res.string();
+                if (!textResult.isOk()) {
+                    *anyFailed = true;
+                    return failure(0);
+                }
+                (*buffers)[i] = textResult.unwrap();
+
+                if (--(*remaining) == 0) {
+                    int pos = 1;
+                    for (int j = 0; j < 6; ++j) {
+                        std::istringstream stream((*buffers)[j]);
+                        std::string line;
+                        int row = 0;
+                        while (std::getline(stream, line)) {
+                            ++row;
+                            if (row <= 3) continue;
+                            auto fields = parseCSVRow(line);
+                            if (fields.size() < 6) continue;
+                            auto& name = fields[1];
+                            auto& tierStr = fields[3];
+                            auto& idStr = fields[5];
+                            if (name.empty() || idStr.empty()) continue;
+                            int levelId = 0;
+                            try { levelId = std::stoi(idStr); } catch (...) { continue; }
+                            if (levelId == 0) continue;
+                            allList.emplace_back(levelId, pos++, name, parseTier(tierStr));
+                        }
+                    }
+                    allListLoaded = true;
+                    (*onDone)();
+                }
+            }
+        );
+    }
 }

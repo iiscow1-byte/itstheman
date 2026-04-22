@@ -1,30 +1,56 @@
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1129,5): w
-arning MSB8027: Two or more files with the name of WorldLevelPage.cpp will produce outputs to the same location. This c
-an lead to an incorrect build result.  The files involved are C:\Users\gerg1\Documents\code\MSCL\allmod\build\_deps\bin
-dings-src\bindings\2.2081\inline\WorldLevelPage.cpp, C:\Users\gerg1\Documents\code\MSCL\allmod\build\bindings\bindings\
-Geode\source\WorldLevelPage.cpp. [C:\Users\gerg1\Documents\code\MSCL\allmod\build\bindings\GeodeBindings.vcxproj]
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1129,5): w
-arning MSB8027: Two or more files with the name of WorldSelectLayer.cpp will produce outputs to the same location. This
- can lead to an incorrect build result.  The files involved are C:\Users\gerg1\Documents\code\MSCL\allmod\build\_deps\b
-indings-src\bindings\2.2081\inline\WorldSelectLayer.cpp, C:\Users\gerg1\Documents\code\MSCL\allmod\build\bindings\bindi
-ngs\Geode\source\WorldSelectLayer.cpp. [C:\Users\gerg1\Documents\code\MSCL\allmod\build\bindings\GeodeBindings.vcxproj]
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1129,5): w
-arning MSB8027: Two or more files with the name of ZipUtils.cpp will produce outputs to the same location. This can lea
-d to an incorrect build result.  The files involved are C:\Users\gerg1\Documents\code\MSCL\allmod\build\_deps\bindings-
-src\bindings\2.2081\inline\ZipUtils.cpp, C:\Users\gerg1\Documents\code\MSCL\allmod\build\bindings\bindings\Geode\source
-\ZipUtils.cpp. [C:\Users\gerg1\Documents\code\MSCL\allmod\build\bindings\GeodeBindings.vcxproj]
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1129,5): w
-arning MSB8027: Two or more files with the name of cocos2d.cpp will produce outputs to the same location. This can lead
- to an incorrect build result.  The files involved are C:\Users\gerg1\Documents\code\MSCL\allmod\build\_deps\bindings-s
-rc\bindings\2.2081\inline\cocos2d.cpp, C:\Users\gerg1\Documents\code\MSCL\allmod\build\bindings\bindings\Geode\source\c
-ocos2d.cpp. [C:\Users\gerg1\Documents\code\MSCL\allmod\build\bindings\GeodeBindings.vcxproj]
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1129,5): w
-arning MSB8027: Two or more files with the name of tk_spline.cpp will produce outputs to the same location. This can le
-ad to an incorrect build result.  The files involved are C:\Users\gerg1\Documents\code\MSCL\allmod\build\_deps\bindings
--src\bindings\2.2081\inline\tk_spline.cpp, C:\Users\gerg1\Documents\code\MSCL\allmod\build\bindings\bindings\Geode\sour
-ce\tk_spline.cpp. [C:\Users\gerg1\Documents\code\MSCL\allmod\build\bindings\GeodeBindings.vcxproj]
-C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1129,5): w
-arning MSB8027: Two or more files with the name of xml_node.cpp will produce outputs to the same location. This can lea
-d to an incorrect build result.  The files involved are C:\Users\gerg1\Documents\code\MSCL\allmod\build\_deps\bindings-
-src\bindings\2.2081\inline\xml_node.cpp, C:\Users\gerg1\Documents\code\MSCL\allmod\build\bindings\bindings\Geode\source
-\xml_node.cpp. [C:\Users\gerg1\Documents\code\MSCL\allmod\build\bindings\GeodeBindings.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1129,5)
+: warning MSB8027: Two or more files with the name of tk_spline.cpp will produce outputs to the same location. This
+can lead to an incorrect build result.  The files involved are C:\Users\gerg1\Documents\code\MSCL\allmod\build\_deps
+\bindings-src\bindings\2.2081\inline\tk_spline.cpp, C:\Users\gerg1\Documents\code\MSCL\allmod\build\bindings\binding
+s\Geode\source\tk_spline.cpp. [C:\Users\gerg1\Documents\code\MSCL\allmod\build\bindings\GeodeBindings.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(1129,5)
+: warning MSB8027: Two or more files with the name of xml_node.cpp will produce outputs to the same location. This c
+an lead to an incorrect build result.  The files involved are C:\Users\gerg1\Documents\code\MSCL\allmod\build\_deps\
+bindings-src\bindings\2.2081\inline\xml_node.cpp, C:\Users\gerg1\Documents\code\MSCL\allmod\build\bindings\bindings\
+Geode\source\xml_node.cpp. [C:\Users\gerg1\Documents\code\MSCL\allmod\build\bindings\GeodeBindings.vcxproj]
+  GeodeBindings.vcxproj -> C:\Users\gerg1\Documents\code\MSCL\allmod\build\bindings\RelWithDebInfo\GeodeBindings.lib
+  jasmine.cpp
+  IntegratedDemonlist.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\functional(1104,23): error
+ C2338: static_assert failed: 'The target function object type must be copy constructible (N4988 [func.wrap.func.con
+]/10.1).' [C:\Users\gerg1\Documents\code\MSCL\allmod\build\IntegratedDemonlist.vcxproj]
+  (compiling source file '../src/IntegratedDemonlist.cpp')
+      C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\functional(1104,23):
+      the template instantiation context (the oldest one first) is
+          C:\Users\gerg1\Documents\code\MSCL\allmod\src\IntegratedDemonlist.cpp(172,24):
+          see reference to function template instantiation 'std::shared_ptr<std::function<void (void)>> std::make_sh
+  ared<std::function<void (void)>,std::move_only_function<void (void)>>(std::move_only_function<void (void)> &&)' be
+  ing compiled
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2913,46):
+          see reference to function template instantiation 'std::_Ref_count_obj2<std::function<void (void)>>::_Ref_c
+  ount_obj2<_Ty>(_Ty &&)' being compiled
+          with
+          [
+              _Ty=std::move_only_function<void (void)>
+          ]
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\memory(2100,18):
+          see reference to function template instantiation 'void std::_Construct_in_place<_Ty,std::move_only_functio
+  n<void (void)>>(_Ty &,std::move_only_function<void (void)> &&) noexcept(false)' being compiled
+          with
+          [
+              _Ty=std::function<void (void)>
+          ]
+          C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\include\xutility(476,82)
+  :
+          see reference to function template instantiation 'std::function<void (void)>::function<_T,0>(_Fx &&)' bein
+  g compiled
+          with
+          [
+              _T=std::move_only_function<void (void)>,
+              _Fx=std::move_only_function<void (void)>
+          ]
+
+  IDListLayer.cpp
+  IDPackCell.cpp
+  IDPackLayer.cpp
+  LevelBrowserLayer.cpp
+  LevelCell.cpp
+  LevelInfoLayer.cpp
+  LevelSearchLayer.cpp
+  Generating Code...
+| Fail | CMake build returned code 1

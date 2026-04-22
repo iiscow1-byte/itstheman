@@ -258,7 +258,7 @@ bool IDListLayer::init() {
         else IntegratedDemonlist::loadPemonlist(m_pemonlistListener, [this] { populateList(""); }, m_pemonlistFailure);
     } else if (listMode == 2) {
         if (IntegratedDemonlist::allListLoaded) populateList("");
-        else IntegratedDemonlist::loadAllList(m_allListListener, [this] { populateList(""); }, m_allListFailure);
+        else IntegratedDemonlist::loadAllList(m_allListListeners, [this] { populateList(""); }, m_allListFailure);
     } else {
         if (IntegratedDemonlist::aredlLoaded) populateList("");
         else IntegratedDemonlist::loadAREDL(m_aredlListener, [this] { populateList(""); }, m_aredlFailure);
@@ -284,7 +284,7 @@ void IDListLayer::onRefresh(CCObject* sender) {
     if (listMode == 1) {
         IntegratedDemonlist::loadPemonlist(m_pemonlistListener, [this] { populateList(m_query); }, m_pemonlistFailure);
     } else if (listMode == 2) {
-        IntegratedDemonlist::loadAllList(m_allListListener, [this] { populateList(m_query); }, m_allListFailure);
+        IntegratedDemonlist::loadAllList(m_allListListeners, [this] { populateList(m_query); }, m_allListFailure);
     } else {
         IntegratedDemonlist::loadAREDL(m_aredlListener, [this] { populateList(m_query); }, m_aredlFailure);
     }
@@ -339,7 +339,7 @@ void IDListLayer::onAll(CCObject* sender) {
     m_infoButton->m_description = gd::string(allListInfo.data(), allListInfo.size());
     m_fullSearchResults.clear();
     if (IntegratedDemonlist::allListLoaded) page(0);
-    else IntegratedDemonlist::loadAllList(m_allListListener, [this] { page(0); }, m_allListFailure);
+    else IntegratedDemonlist::loadAllList(m_allListListeners, [this] { page(0); }, m_allListFailure);
 }
 
 void IDListLayer::onPage(CCObject* sender) {
@@ -381,16 +381,17 @@ void IDListLayer::populateList(const std::string& query) {
                      : listMode == 2 ? IntegratedDemonlist::allList
                      :                 IntegratedDemonlist::aredl;
     if (query.empty()) {
+        m_fullSearchResults.reserve(sourceList.size());
         for (auto& level : sourceList) {
-            m_fullSearchResults.push_back(fmt::to_string(level.id));
+            m_fullSearchResults.push_back(level.idStr);
         }
         searchSprite->setDisplayFrame(CCSpriteFrameCache::get()->spriteFrameByName("gj_findBtn_001.png"));
     }
     else {
         auto lowerQuery = string::toLower(query);
         for (auto& level : sourceList) {
-            if (!string::toLower(level.name).contains(lowerQuery)) continue;
-            m_fullSearchResults.push_back(fmt::to_string(level.id));
+            if (level.nameLower.find(lowerQuery) == std::string::npos) continue;
+            m_fullSearchResults.push_back(level.idStr);
         }
         auto texture = CCTextureCache::get()->addImage("ID_findBtnOn_001.png"_spr, false);
         searchSprite->setDisplayFrame(CCSpriteFrame::createWithTexture(texture, { { 0.0f, 0.0f }, texture->getContentSize() }));
@@ -461,14 +462,8 @@ void IDListLayer::setupPageInfo(gd::string, const char*) {
 void IDListLayer::onSearch(CCObject* sender) {
     auto query = m_searchBar->getString();
     if (m_query != query) {
-        showLoading();
-        if (listMode == 1) {
-            IntegratedDemonlist::loadPemonlist(m_pemonlistListener, [this, query] { m_page = 0; populateList(query); }, m_pemonlistFailure);
-        } else if (listMode == 2) {
-            IntegratedDemonlist::loadAllList(m_allListListener, [this, query] { m_page = 0; populateList(query); }, m_allListFailure);
-        } else {
-            IntegratedDemonlist::loadAREDL(m_aredlListener, [this, query] { m_page = 0; populateList(query); }, m_aredlFailure);
-        }
+        m_page = 0;
+        populateList(query);
     }
 }
 
