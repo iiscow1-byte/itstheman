@@ -7,6 +7,12 @@
 
 using namespace geode::prelude;
 
+struct RankInfo {
+    int position;
+    int tier;
+    const char* listName;
+};
+
 class $modify(IDLevelInfoLayer, LevelInfoLayer) {
     struct Fields {
         TaskHolder<web::WebResponse> m_listener;
@@ -21,24 +27,20 @@ class $modify(IDLevelInfoLayer, LevelInfoLayer) {
         if (platformer) {
             for (auto& demon : IntegratedDemonlist::pemonlist) {
                 if (demon.id == levelID) {
-                    addDemonlistBadge(demon.position, demon.tier, true);
+                    addDemonlistBadges(true, {{demon.position, demon.tier, "Pemonlist"}});
                     return true;
                 }
             }
             if (IntegratedDemonlist::pemonlistLoaded) return true;
         } else {
+            std::vector<RankInfo> ranks;
             for (auto& demon : IntegratedDemonlist::aredl) {
-                if (demon.id == levelID) {
-                    addDemonlistBadge(demon.position, demon.tier, false);
-                    return true;
-                }
+                if (demon.id == levelID) { ranks.push_back({demon.position, demon.tier, "MSCL"}); break; }
             }
             for (auto& demon : IntegratedDemonlist::allList) {
-                if (demon.id == levelID) {
-                    addDemonlistBadge(demon.position, demon.tier, false, "ALL");
-                    return true;
-                }
+                if (demon.id == levelID) { ranks.push_back({demon.position, demon.tier, "ALL"}); break; }
             }
+            if (!ranks.empty()) { addDemonlistBadges(false, ranks); return true; }
             if (IntegratedDemonlist::aredlLoaded) return true;
         }
 
@@ -71,14 +73,14 @@ class $modify(IDLevelInfoLayer, LevelInfoLayer) {
                     if (position == -1) return;
                 }
 
-                addDemonlistBadge(position, tier, platformer);
+                addDemonlistBadges(platformer, {{position, tier, platformer ? "Pemonlist" : "MSCL"}});
             }
         );
 
         return true;
     }
 
-    void addDemonlistBadge(int position, int tier, bool platformer, const char* listName = nullptr) {
+    void addDemonlistBadges(bool platformer, const std::vector<RankInfo>& entries) {
         auto diffSpr = m_difficultySprite;
         if (!diffSpr) return;
         auto parent = diffSpr->getParent();
@@ -88,35 +90,41 @@ class $modify(IDLevelInfoLayer, LevelInfoLayer) {
         float diffHalfW = diffSpr->getScaledContentWidth() * 0.5f;
         int z = diffSpr->getZOrder();
 
-        // Tier icon to the left of the difficulty sprite (classic list only)
-        if (!platformer && tier >= 0) {
-            auto tierPath = (Mod::get()->getResourcesDir() / fmt::format("{}-uhd.png", tier)).string();
-            auto tierSpr = CCSprite::create(tierPath.c_str());
-            if (tierSpr) {
-                tierSpr->setScale(4.5f / 4.0f);
-                tierSpr->setPosition({diffPos.x - diffHalfW - 34.0f, diffPos.y + 8.0f});
-                tierSpr->setID("demonlist-tier-icon"_spr);
-                parent->addChild(tierSpr, z);
+        // Tier icon to the left of the difficulty sprite (use first entry with a valid tier)
+        CCSprite* tierSpr = nullptr;
+        if (!platformer) {
+            for (auto& entry : entries) {
+                if (entry.tier >= 0) {
+                    auto tierPath = (Mod::get()->getResourcesDir() / fmt::format("{}-uhd.png", entry.tier)).string();
+                    tierSpr = CCSprite::create(tierPath.c_str());
+                    if (tierSpr) {
+                        tierSpr->setScale(4.5f / 4.0f);
+                        tierSpr->setPosition({diffPos.x - diffHalfW - 34.0f, diffPos.y + 8.0f});
+                        tierSpr->setID("demonlist-tier-icon"_spr);
+                        parent->addChild(tierSpr, z);
+                    }
+                    break;
+                }
             }
         }
 
-        // Position label below the stars label (and coin row) if present
-        float rankY = diffPos.y - 45.0f;
-        if (m_starsLabel) {
-            rankY = m_starsLabel->getPositionY() - m_starsLabel->getScaledContentHeight() - 2.0f;
-            if (m_level && m_level->m_coins > 0) {
-                rankY -= 14.0f;
-            }
-        }
+        // Rank labels stack below the tier icon, right-aligned to the left of the difficulty sprite
+        float rightX = diffPos.x - diffHalfW - 4.0f;
+        float currentY = tierSpr
+            ? tierSpr->getPositionY() - tierSpr->getScaledContentHeight() * 0.5f - 6.0f
+            : diffPos.y - 45.0f;
 
-        const char* name = listName ? listName : (platformer ? "Pemonlist" : "MSCL");
-        auto rankLabel = CCLabelBMFont::create(
-            fmt::format("#{} {}", position, name).c_str(), "bigFont.fnt"
-        );
-        rankLabel->setScale(0.45f);
-        rankLabel->setColor({255, 200, 50});
-        rankLabel->setPosition({diffPos.x, rankY});
-        rankLabel->setID("demonlist-rank-label"_spr);
-        parent->addChild(rankLabel, z);
+        for (auto& entry : entries) {
+            auto rankLabel = CCLabelBMFont::create(
+                fmt::format("#{} {}", entry.position, entry.listName).c_str(), "bigFont.fnt"
+            );
+            rankLabel->setScale(0.45f);
+            rankLabel->setColor({255, 200, 50});
+            rankLabel->setAnchorPoint({1.0f, 0.5f});
+            rankLabel->setPosition({rightX, currentY});
+            rankLabel->setID("demonlist-rank-label"_spr);
+            parent->addChild(rankLabel, z);
+            currentY -= rankLabel->getScaledContentHeight() + 2.0f;
+        }
     }
 };
