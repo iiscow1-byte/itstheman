@@ -35,6 +35,12 @@ class $modify(IDLevelCell, LevelCell) {
         }
         if (!positions.empty()) return addRank(positions);
 
+        if (!platformer) {
+            for (auto& demon : IntegratedDemonlist::allList) {
+                if (demon.id == levelID) return addRankALL({ demon.position });
+            }
+        }
+
         if (loadedDemons.contains(levelID)) return;
         loadedDemons.insert(levelID);
 
@@ -80,7 +86,15 @@ class $modify(IDLevelCell, LevelCell) {
         );
     }
 
+    void addRankALL(const std::vector<int>& positions) {
+        addRankWithLabel(positions, " ALL");
+    }
+
     void addRank(const std::vector<int>& positions) {
+        addRankWithLabel(positions, m_level->isPlatformer() ? " Pemonlist" : " MSCL");
+    }
+
+    void addRankWithLabel(const std::vector<int>& positions, const char* listName) {
         if (m_mainLayer->getChildByID("level-rank-label"_spr)) return;
 
         auto dailyLevel = m_level->m_dailyID.value() > 0;
@@ -91,8 +105,7 @@ class $modify(IDLevelCell, LevelCell) {
             if (it != positions.begin()) positionsStr.append('/');
             positionsStr.append("#{}", *it);
         }
-        if (m_level->isPlatformer()) positionsStr.append(" Pemonlist");
-        else positionsStr.append(" MSCL");
+        positionsStr.append("{}", listName);
 
         auto rankTextNode = CCLabelBMFont::create(positionsStr.c_str(), "chatFont.fnt");
         rankTextNode->setPosition({ 346.0f, dailyLevel ? 6.0f : 1.0f });

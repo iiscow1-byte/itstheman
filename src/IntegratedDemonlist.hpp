@@ -27,10 +27,13 @@ namespace IntegratedDemonlist {
     extern std::vector<IDListDemon> aredl;
     extern std::vector<IDDemonPack> aredlPacks;
     extern std::vector<IDListDemon> pemonlist;
+    extern std::vector<IDListDemon> allList;
     extern bool aredlLoaded;
     extern bool pemonlistLoaded;
+    extern bool allListLoaded;
 
     void loadAREDL(geode::async::TaskHolder<geode::utils::web::WebResponse>&, geode::Function<void()>, geode::CopyableFunction<void(int)>);
     void loadAREDLPacks(geode::async::TaskHolder<geode::utils::web::WebResponse>&, geode::Function<void()>, geode::CopyableFunction<void(int)>);
     void loadPemonlist(geode::async::TaskHolder<geode::utils::web::WebResponse>&, geode::Function<void()>, geode::CopyableFunction<void(int)>);
+    void loadAllList(geode::async::TaskHolder<geode::utils::web::WebResponse>&, geode::Function<void()>, geode::CopyableFunction<void(int)>);
 }

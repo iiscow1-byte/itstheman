@@ -24,7 +24,9 @@
       "PowerShell(& \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" \"c:\\\\Users\\\\gerg1\\\\Documents\\\\code\\\\MSCL\\\\allmod\\\\build\\\\IntegratedDemonlist.vcxproj\" /p:Configuration=RelWithDebInfo /p:Platform=x64 /v:minimal 2>&1 | Where-Object { $_ -match \"error C|error LNK\" } | Select-Object -Last 20)",
       "Read(//c/Users/gerg1/**)",
       "PowerShell(& \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" \"c:\\\\Users\\\\gerg1\\\\Documents\\\\code\\\\MSCL\\\\allmod\\\\build\\\\IntegratedDemonlist.vcxproj\" /p:Configuration=RelWithDebInfo /p:Platform=x64 /v:minimal 2>&1 | Where-Object { $_ -match \"error C|error LNK|warning C4|Build succeeded\" } | Select-Object -Last 20)",
-      "PowerShell(& \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" \"c:\\\\Users\\\\gerg1\\\\Documents\\\\code\\\\MSCL\\\\allmod\\\\build\\\\IntegratedDemonlist.vcxproj\" /p:Configuration=RelWithDebInfo /p:Platform=x64 /v:minimal 2>&1)"
+      "PowerShell(& \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" \"c:\\\\Users\\\\gerg1\\\\Documents\\\\code\\\\MSCL\\\\allmod\\\\build\\\\IntegratedDemonlist.vcxproj\" /p:Configuration=RelWithDebInfo /p:Platform=x64 /v:minimal 2>&1)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" \"c:\\\\Users\\\\gerg1\\\\Documents\\\\code\\\\MSCL\\\\allmod\\\\build\\\\IntegratedDemonlist.vcxproj\" /p:Configuration=RelWithDebInfo /p:Platform=x64 /v:minimal 2>&1 | Where-Object { $_ -match \"error C|error LNK\" } | Select-Object -Last 30)",
+      "WebFetch(domain:docs.google.com)"
     ]
   }
 }

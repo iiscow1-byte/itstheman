@@ -33,6 +33,12 @@ class $modify(IDLevelInfoLayer, LevelInfoLayer) {
                     return true;
                 }
             }
+            for (auto& demon : IntegratedDemonlist::allList) {
+                if (demon.id == levelID) {
+                    addDemonlistBadge(demon.position, demon.tier, false, "ALL");
+                    return true;
+                }
+            }
             if (IntegratedDemonlist::aredlLoaded) return true;
         }
 
@@ -72,7 +78,7 @@ class $modify(IDLevelInfoLayer, LevelInfoLayer) {
         return true;
     }
 
-    void addDemonlistBadge(int position, int tier, bool platformer) {
+    void addDemonlistBadge(int position, int tier, bool platformer, const char* listName = nullptr) {
         auto diffSpr = m_difficultySprite;
         if (!diffSpr) return;
         auto parent = diffSpr->getParent();
@@ -94,14 +100,15 @@ class $modify(IDLevelInfoLayer, LevelInfoLayer) {
             }
         }
 
-        // Position label anchored just below the stars label
+        // Position label below the stars label if it exists
         float rankY = diffPos.y - 45.0f;
         if (m_starsLabel) {
-            rankY = m_starsLabel->getPositionY() - 0.0f;
+            rankY = m_starsLabel->getPositionY() - m_starsLabel->getScaledContentHeight() - 2.0f;
         }
 
+        const char* name = listName ? listName : (platformer ? "Pemonlist" : "MSCL");
         auto rankLabel = CCLabelBMFont::create(
-            fmt::format("#{} MSCL", position).c_str(), "bigFont.fnt"
+            fmt::format("#{} {}", position, name).c_str(), "bigFont.fnt"
         );
         rankLabel->setScale(0.45f);
         rankLabel->setColor({255, 200, 50});

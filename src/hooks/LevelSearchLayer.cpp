@@ -19,7 +19,7 @@ public:
 
 private:
     bool initPopup() {
-        if (!geode::Popup::init(250.f, 130.f)) return false;
+        if (!geode::Popup::init(310.f, 130.f)) return false;
         setTitle("Select List");
 
         auto menu = CCMenu::create();
@@ -27,44 +27,59 @@ private:
         m_mainLayer->addChild(menu);
 
         auto msclBg = CCScale9Sprite::create("GJ_button_01.png");
-        msclBg->setContentSize({ 90.f, 60.f });
+        msclBg->setContentSize({ 82.f, 60.f });
         auto starSpr = CCSprite::createWithSpriteFrameName("GJ_starsIcon_001.png");
         starSpr->setScale(1.1f);
-        starSpr->setPosition({ 45.f, 38.f });
+        starSpr->setPosition({ 41.f, 38.f });
         msclBg->addChild(starSpr);
         auto msclLabel = CCLabelBMFont::create("MSCL", "bigFont.fnt");
         msclLabel->setScale(0.5f);
-        msclLabel->setPosition({ 45.f, 13.f });
+        msclLabel->setPosition({ 41.f, 13.f });
         msclBg->addChild(msclLabel);
         auto msclBtn = CCMenuItemSpriteExtra::create(msclBg, this, menu_selector(IDListSelectPopup::onMSCL));
-        msclBtn->setPosition({ -55.f, 0.f });
+        msclBtn->setPosition({ -96.f, 0.f });
         menu->addChild(msclBtn);
 
         auto pemonBg = CCScale9Sprite::create("GJ_button_01.png");
-        pemonBg->setContentSize({ 90.f, 60.f });
+        pemonBg->setContentSize({ 82.f, 60.f });
         auto moonSpr = CCSprite::createWithSpriteFrameName("GJ_moonsIcon_001.png");
         moonSpr->setScale(1.1f);
-        moonSpr->setPosition({ 45.f, 38.f });
+        moonSpr->setPosition({ 41.f, 38.f });
         pemonBg->addChild(moonSpr);
         auto pemonLabel = CCLabelBMFont::create("Pemonlist", "bigFont.fnt");
         pemonLabel->setScale(0.35f);
-        pemonLabel->setPosition({ 45.f, 13.f });
+        pemonLabel->setPosition({ 41.f, 13.f });
         pemonBg->addChild(pemonLabel);
         auto pemonBtn = CCMenuItemSpriteExtra::create(pemonBg, this, menu_selector(IDListSelectPopup::onPemonlist));
-        pemonBtn->setPosition({ 55.f, 0.f });
+        pemonBtn->setPosition({ 0.f, 0.f });
         menu->addChild(pemonBtn);
+
+        auto allBg = CCScale9Sprite::create("GJ_button_01.png");
+        allBg->setContentSize({ 82.f, 60.f });
+        auto allLabel = CCLabelBMFont::create("ALL", "bigFont.fnt");
+        allLabel->setScale(0.65f);
+        allLabel->setPosition({ 41.f, 30.f });
+        allBg->addChild(allLabel);
+        auto allBtn = CCMenuItemSpriteExtra::create(allBg, this, menu_selector(IDListSelectPopup::onAll));
+        allBtn->setPosition({ 96.f, 0.f });
+        menu->addChild(allBtn);
 
         return true;
     }
 
     void onMSCL(CCObject*) {
         onClose(nullptr);
-        CCDirector::get()->pushScene(CCTransitionFade::create(0.5f, IDListLayer::scene(false)));
+        CCDirector::get()->pushScene(CCTransitionFade::create(0.5f, IDListLayer::scene(0)));
     }
 
     void onPemonlist(CCObject*) {
         onClose(nullptr);
-        CCDirector::get()->pushScene(CCTransitionFade::create(0.5f, IDListLayer::scene(true)));
+        CCDirector::get()->pushScene(CCTransitionFade::create(0.5f, IDListLayer::scene(1)));
+    }
+
+    void onAll(CCObject*) {
+        onClose(nullptr);
+        CCDirector::get()->pushScene(CCTransitionFade::create(0.5f, IDListLayer::scene(2)));
     }
 };
 

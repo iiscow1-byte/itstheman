@@ -7,7 +7,7 @@ class IDListLayer : public cocos2d::CCLayer, SetIDPopupDelegate, LevelManagerDel
 public:
     static IDListLayer* create();
     static cocos2d::CCScene* scene();
-    static cocos2d::CCScene* scene(bool startWithPemonlist);
+    static cocos2d::CCScene* scene(int mode); // 0=MSCL, 1=Pemonlist, 2=ALL
 
     void page(int);
     void keyDown(cocos2d::enumKeyCodes, double) override;
@@ -17,6 +17,7 @@ public:
 protected:
     geode::async::TaskHolder<geode::utils::web::WebResponse> m_aredlListener;
     geode::async::TaskHolder<geode::utils::web::WebResponse> m_pemonlistListener;
+    geode::async::TaskHolder<geode::utils::web::WebResponse> m_allListListener;
     GJListLayer* m_list;
     cocos2d::CCLabelBMFont* m_listLabel;
     LoadingCircle* m_loadingCircle;
@@ -33,14 +34,17 @@ protected:
     CCMenuItemSpriteExtra* m_lastButton;
     CCMenuItemSpriteExtra* m_starToggle;
     CCMenuItemSpriteExtra* m_moonToggle;
+    CCMenuItemSpriteExtra* m_allToggle;
     CCMenuItemSpriteExtra* m_searchButton;
     int m_page = 0;
     std::string m_query;
     std::vector<std::string> m_fullSearchResults;
     geode::CopyableFunction<void(int)> m_aredlFailure;
     geode::CopyableFunction<void(int)> m_pemonlistFailure;
+    geode::CopyableFunction<void(int)> m_allListFailure;
 
     bool init() override;
+    void setListMode(int mode);
     void onSearch(cocos2d::CCObject*);
     void onBack(cocos2d::CCObject*);
     void onPrevPage(cocos2d::CCObject*);
@@ -48,6 +52,7 @@ protected:
     void onRefresh(cocos2d::CCObject*);
     void onStar(cocos2d::CCObject*);
     void onMoon(cocos2d::CCObject*);
+    void onAll(cocos2d::CCObject*);
     void onPage(cocos2d::CCObject*);
     void onRandom(cocos2d::CCObject*);
     void onFirst(cocos2d::CCObject*);

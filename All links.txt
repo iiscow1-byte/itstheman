@@ -1,0 +1,6 @@
+list 1: https://docs.google.com/spreadsheets/d/e/2PACX-1vQBDKoXQm4Zxzt_Fuv7WhdVhcTB80lsDCXqSYPMm62Ee2DJDHzhQScoxbp7Jj33OFgkPV9WEJlNyhML/pub?gid=0&single=true&output=csv
+list 2: https://docs.google.com/spreadsheets/d/e/2PACX-1vQBDKoXQm4Zxzt_Fuv7WhdVhcTB80lsDCXqSYPMm62Ee2DJDHzhQScoxbp7Jj33OFgkPV9WEJlNyhML/pub?gid=1036115495&single=true&output=csv
+list 3: https://docs.google.com/spreadsheets/d/e/2PACX-1vQBDKoXQm4Zxzt_Fuv7WhdVhcTB80lsDCXqSYPMm62Ee2DJDHzhQScoxbp7Jj33OFgkPV9WEJlNyhML/pub?gid=1989779679&single=true&output=csv
+list 4: https://docs.google.com/spreadsheets/d/e/2PACX-1vQBDKoXQm4Zxzt_Fuv7WhdVhcTB80lsDCXqSYPMm62Ee2DJDHzhQScoxbp7Jj33OFgkPV9WEJlNyhML/pub?gid=516171001&single=true&output=csv
+list 5: https://docs.google.com/spreadsheets/d/e/2PACX-1vQBDKoXQm4Zxzt_Fuv7WhdVhcTB80lsDCXqSYPMm62Ee2DJDHzhQScoxbp7Jj33OFgkPV9WEJlNyhML/pub?gid=1985672631&single=true&output=csv
+list 6: https://docs.google.com/spreadsheets/d/e/2PACX-1vQBDKoXQm4Zxzt_Fuv7WhdVhcTB80lsDCXqSYPMm62Ee2DJDHzhQScoxbp7Jj33OFgkPV9WEJlNyhML/pub?gid=1875166663&single=true&output=csv
