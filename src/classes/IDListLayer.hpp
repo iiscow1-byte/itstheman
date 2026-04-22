@@ -7,6 +7,7 @@ class IDListLayer : public cocos2d::CCLayer, SetIDPopupDelegate, LevelManagerDel
 public:
     static IDListLayer* create();
     static cocos2d::CCScene* scene();
+    static cocos2d::CCScene* scene(bool startWithPemonlist);
 
     void page(int);
     void keyDown(cocos2d::enumKeyCodes, double) override;

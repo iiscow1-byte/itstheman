@@ -31,6 +31,12 @@ CCScene* IDListLayer::scene() {
 }
 
 bool pemonlistEnabled = false;
+
+CCScene* IDListLayer::scene(bool startWithPemonlist) {
+    pemonlistEnabled = startWithPemonlist;
+    return scene();
+}
+
 constexpr std::string_view aredlInfo =
     "The <cg>MSCL</c> is an <cp>unofficial ranking</c> "
     "of <cj>classic mode</c> <cr>extreme demons</c> in Geometry Dash.";
