@@ -30,7 +30,7 @@ CCScene* IDListLayer::scene() {
     return ret;
 }
 
-// 0 = MSCL, 1 = Pemonlist, 2 = ALL
+// 0 = MSCL, 1 = ALL, 2 = AREDL, 3 = CL
 int listMode = 0;
 
 CCScene* IDListLayer::scene(int mode) {
@@ -41,13 +41,15 @@ CCScene* IDListLayer::scene(int mode) {
 constexpr std::string_view aredlInfo =
     "The <cg>MSCL</c> is an <cp>unofficial ranking</c> "
     "of <cj>classic mode</c> <cr>extreme demons</c> in Geometry Dash.";
-constexpr std::string_view pemonlistInfo =
-    "The <cg>Pemonlist</c> is an <cp>unofficial ranking</c> of the top 150 <cj>platformer mode</c> <cr>demons</c> in Geometry Dash.\n"
-    "It is managed by <cy>camila314</c>, <cy>Extatica</c>, <cy>IvanCrafter026</c>, <cy>Megu</c>, <cy>Voiddle</c>, "
-    "<cy>FakeHATETAG</c>, and <cy>Enzo1141</c>.";
 constexpr std::string_view allListInfo =
     "The <cg>ALL</c> list is a ranking of <cr>extreme demons</c> in Geometry Dash "
     "ordered by difficulty across <cj>6 sublists</c>.";
+constexpr std::string_view aredlOfficialInfo =
+    "The <cg>AREDL</c> (All Rated Extreme Demon List) is a community ranking "
+    "of <cr>extreme demons</c> in Geometry Dash.";
+constexpr std::string_view challengeListInfo =
+    "The <cg>Challenge List</c> is a community ranking "
+    "of <cr>challenges</c> in Geometry Dash.";
 
 bool IDListLayer::init() {
     if (!CCLayer::init()) return false;
@@ -84,7 +86,7 @@ bool IDListLayer::init() {
     m_countLabel->setID("level-count-label");
     addChild(m_countLabel);
 
-    const char* listTitle = listMode == 1 ? "Pemonlist" : (listMode == 2 ? "ALL" : "MSCL");
+    const char* listTitle = listMode == 1 ? "ALL" : listMode == 2 ? "AREDL" : listMode == 3 ? "CL" : "MSCL";
     m_list = GJListLayer::create(nullptr, listTitle, { 0, 0, 0, 180 }, 356.0f, 220.0f, 0);
     m_list->setPosition(winSize / 2.0f - m_list->getContentSize() / 2.0f);
     m_list->setID("GJListLayer");
@@ -144,8 +146,8 @@ bool IDListLayer::init() {
     m_rightButton->setID("next-page-button");
     menu->addChild(m_rightButton);
 
-    auto infoTitle = listMode == 1 ? "Pemonlist" : (listMode == 2 ? "ALL" : "MSCL");
-    auto& infoDesc = listMode == 1 ? pemonlistInfo : (listMode == 2 ? allListInfo : aredlInfo);
+    auto infoTitle = listMode == 1 ? "ALL" : listMode == 2 ? "AREDL" : listMode == 3 ? "CL" : "MSCL";
+    auto& infoDesc = listMode == 1 ? allListInfo : listMode == 2 ? aredlOfficialInfo : listMode == 3 ? challengeListInfo : aredlInfo;
     m_infoButton = InfoAlertButton::create(infoTitle,
         gd::string(infoDesc.data(), infoDesc.size()), 1.0f);
     m_infoButton->setPosition({ 30.0f, 30.0f });
@@ -157,8 +159,13 @@ bool IDListLayer::init() {
         m_loadingCircle->setVisible(false);
     };
 
-    m_pemonlistFailure = [this](int code) {
-        FLAlertLayer::create(fmt::format("Load Failed ({})", code).c_str(), "Failed to load Pemonlist. Please try again later.", "OK")->show();
+    m_aredlOfficialFailure = [this](int code) {
+        FLAlertLayer::create(fmt::format("Load Failed ({})", code).c_str(), "Failed to load AREDL. Please try again later.", "OK")->show();
+        m_loadingCircle->setVisible(false);
+    };
+
+    m_clFailure = [this](int code) {
+        FLAlertLayer::create(fmt::format("Load Failed ({})", code).c_str(), "Failed to load Challenge List. Please try again later.", "OK")->show();
         m_loadingCircle->setVisible(false);
     };
 
@@ -181,21 +188,29 @@ bool IDListLayer::init() {
     m_starToggle->setID("aredl-button");
     menu->addChild(m_starToggle, 2);
 
-    auto moonSprite = CCSprite::createWithSpriteFrameName("GJ_moonsIcon_001.png");
-    moonSprite->setScale(1.1f);
-    m_moonToggle = CCMenuItemSpriteExtra::create(moonSprite, this, menu_selector(IDListLayer::onMoon));
-    m_moonToggle->setPosition({ 60.0f, 60.0f });
-    m_moonToggle->setColor(listMode == 1 ? ccColor3B { 255, 255, 255 } : ccColor3B { 125, 125, 125 });
-    m_moonToggle->setID("pemonlist-button");
-    menu->addChild(m_moonToggle, 2);
-
     auto allLabel = CCLabelBMFont::create("ALL", "bigFont.fnt");
     allLabel->setScale(0.5f);
     m_allToggle = CCMenuItemSpriteExtra::create(allLabel, this, menu_selector(IDListLayer::onAll));
-    m_allToggle->setPosition({ 90.0f, 60.0f });
-    m_allToggle->setColor(listMode == 2 ? ccColor3B { 255, 255, 255 } : ccColor3B { 125, 125, 125 });
+    m_allToggle->setPosition({ 60.0f, 60.0f });
+    m_allToggle->setColor(listMode == 1 ? ccColor3B { 255, 255, 255 } : ccColor3B { 125, 125, 125 });
     m_allToggle->setID("all-button");
     menu->addChild(m_allToggle, 2);
+
+    auto aredlLabel = CCLabelBMFont::create("AREDL", "bigFont.fnt");
+    aredlLabel->setScale(0.35f);
+    m_aredlToggle = CCMenuItemSpriteExtra::create(aredlLabel, this, menu_selector(IDListLayer::onAREDL));
+    m_aredlToggle->setPosition({ 90.0f, 60.0f });
+    m_aredlToggle->setColor(listMode == 2 ? ccColor3B { 255, 255, 255 } : ccColor3B { 125, 125, 125 });
+    m_aredlToggle->setID("aredl-official-button");
+    menu->addChild(m_aredlToggle, 2);
+
+    auto clLabel = CCLabelBMFont::create("CL", "bigFont.fnt");
+    clLabel->setScale(0.5f);
+    m_clToggle = CCMenuItemSpriteExtra::create(clLabel, this, menu_selector(IDListLayer::onCL));
+    m_clToggle->setPosition({ 120.0f, 60.0f });
+    m_clToggle->setColor(listMode == 3 ? ccColor3B { 255, 255, 255 } : ccColor3B { 125, 125, 125 });
+    m_clToggle->setID("cl-button");
+    menu->addChild(m_clToggle, 2);
 
     auto pageBtnSpr = CCSprite::create("GJ_button_02.png");
     pageBtnSpr->setScale(0.7f);
@@ -254,11 +269,14 @@ bool IDListLayer::init() {
     setKeyboardEnabled(true);
 
     if (listMode == 1) {
-        if (IntegratedDemonlist::pemonlistLoaded) populateList("");
-        else IntegratedDemonlist::loadPemonlist(m_pemonlistListener, [this] { populateList(""); }, m_pemonlistFailure);
-    } else if (listMode == 2) {
         if (IntegratedDemonlist::allListLoaded) populateList("");
         else IntegratedDemonlist::loadAllList(m_allListListeners, [this] { populateList(""); }, m_allListFailure);
+    } else if (listMode == 2) {
+        if (IntegratedDemonlist::aredlOfficialLoaded) populateList("");
+        else IntegratedDemonlist::loadAREDLOfficial(m_aredlOfficialListener, [this] { populateList(""); }, m_aredlOfficialFailure);
+    } else if (listMode == 3) {
+        if (IntegratedDemonlist::challengeListLoaded) populateList("");
+        else IntegratedDemonlist::loadChallengeList(m_challengeListListener, [this] { populateList(""); }, m_clFailure);
     } else {
         if (IntegratedDemonlist::aredlLoaded) populateList("");
         else IntegratedDemonlist::loadAREDL(m_aredlListener, [this] { populateList(""); }, m_aredlFailure);
@@ -282,9 +300,11 @@ void IDListLayer::onNextPage(CCObject* sender) {
 void IDListLayer::onRefresh(CCObject* sender) {
     showLoading();
     if (listMode == 1) {
-        IntegratedDemonlist::loadPemonlist(m_pemonlistListener, [this] { populateList(m_query); }, m_pemonlistFailure);
-    } else if (listMode == 2) {
         IntegratedDemonlist::loadAllList(m_allListListeners, [this] { populateList(m_query); }, m_allListFailure);
+    } else if (listMode == 2) {
+        IntegratedDemonlist::loadAREDLOfficial(m_aredlOfficialListener, [this] { populateList(m_query); }, m_aredlOfficialFailure);
+    } else if (listMode == 3) {
+        IntegratedDemonlist::loadChallengeList(m_challengeListListener, [this] { populateList(m_query); }, m_clFailure);
     } else {
         IntegratedDemonlist::loadAREDL(m_aredlListener, [this] { populateList(m_query); }, m_aredlFailure);
     }
@@ -293,8 +313,9 @@ void IDListLayer::onRefresh(CCObject* sender) {
 void IDListLayer::setListMode(int mode) {
     listMode = mode;
     m_starToggle->setColor(mode == 0 ? ccColor3B { 255, 255, 255 } : ccColor3B { 125, 125, 125 });
-    m_moonToggle->setColor(mode == 1 ? ccColor3B { 255, 255, 255 } : ccColor3B { 125, 125, 125 });
-    m_allToggle->setColor(mode == 2 ? ccColor3B { 255, 255, 255 } : ccColor3B { 125, 125, 125 });
+    m_allToggle->setColor(mode == 1 ? ccColor3B { 255, 255, 255 } : ccColor3B { 125, 125, 125 });
+    m_aredlToggle->setColor(mode == 2 ? ccColor3B { 255, 255, 255 } : ccColor3B { 125, 125, 125 });
+    m_clToggle->setColor(mode == 3 ? ccColor3B { 255, 255, 255 } : ccColor3B { 125, 125, 125 });
 }
 
 void IDListLayer::onStar(CCObject* sender) {
@@ -312,24 +333,9 @@ void IDListLayer::onStar(CCObject* sender) {
     else IntegratedDemonlist::loadAREDL(m_aredlListener, [this] { page(0); }, m_aredlFailure);
 }
 
-void IDListLayer::onMoon(CCObject* sender) {
+void IDListLayer::onAll(CCObject* sender) {
     if (listMode == 1) return;
     setListMode(1);
-    showLoading();
-    if (auto listTitle = static_cast<CCLabelBMFont*>(m_list->getChildByID("title"))) {
-        listTitle->setString("Pemonlist");
-        listTitle->limitLabelWidth(280.0f, 0.8f, 0.0f);
-    }
-    m_infoButton->m_title = "Pemonlist";
-    m_infoButton->m_description = gd::string(pemonlistInfo.data(), pemonlistInfo.size());
-    m_fullSearchResults.clear();
-    if (IntegratedDemonlist::pemonlistLoaded) page(0);
-    else IntegratedDemonlist::loadPemonlist(m_pemonlistListener, [this] { page(0); }, m_pemonlistFailure);
-}
-
-void IDListLayer::onAll(CCObject* sender) {
-    if (listMode == 2) return;
-    setListMode(2);
     showLoading();
     if (auto listTitle = static_cast<CCLabelBMFont*>(m_list->getChildByID("title"))) {
         listTitle->setString("ALL");
@@ -340,6 +346,36 @@ void IDListLayer::onAll(CCObject* sender) {
     m_fullSearchResults.clear();
     if (IntegratedDemonlist::allListLoaded) page(0);
     else IntegratedDemonlist::loadAllList(m_allListListeners, [this] { page(0); }, m_allListFailure);
+}
+
+void IDListLayer::onAREDL(CCObject* sender) {
+    if (listMode == 2) return;
+    setListMode(2);
+    showLoading();
+    if (auto listTitle = static_cast<CCLabelBMFont*>(m_list->getChildByID("title"))) {
+        listTitle->setString("AREDL");
+        listTitle->limitLabelWidth(280.0f, 0.8f, 0.0f);
+    }
+    m_infoButton->m_title = "AREDL";
+    m_infoButton->m_description = gd::string(aredlOfficialInfo.data(), aredlOfficialInfo.size());
+    m_fullSearchResults.clear();
+    if (IntegratedDemonlist::aredlOfficialLoaded) page(0);
+    else IntegratedDemonlist::loadAREDLOfficial(m_aredlOfficialListener, [this] { page(0); }, m_aredlOfficialFailure);
+}
+
+void IDListLayer::onCL(CCObject* sender) {
+    if (listMode == 3) return;
+    setListMode(3);
+    showLoading();
+    if (auto listTitle = static_cast<CCLabelBMFont*>(m_list->getChildByID("title"))) {
+        listTitle->setString("CL");
+        listTitle->limitLabelWidth(280.0f, 0.8f, 0.0f);
+    }
+    m_infoButton->m_title = "CL";
+    m_infoButton->m_description = gd::string(challengeListInfo.data(), challengeListInfo.size());
+    m_fullSearchResults.clear();
+    if (IntegratedDemonlist::challengeListLoaded) page(0);
+    else IntegratedDemonlist::loadChallengeList(m_challengeListListener, [this] { page(0); }, m_clFailure);
 }
 
 void IDListLayer::onPage(CCObject* sender) {
@@ -377,8 +413,9 @@ void IDListLayer::showLoading() {
 void IDListLayer::populateList(const std::string& query) {
     m_fullSearchResults.clear();
     auto searchSprite = static_cast<CCSprite*>(m_searchButton->getNormalImage());
-    auto& sourceList = listMode == 1 ? IntegratedDemonlist::pemonlist
-                     : listMode == 2 ? IntegratedDemonlist::allList
+    auto& sourceList = listMode == 1 ? IntegratedDemonlist::allList
+                     : listMode == 2 ? IntegratedDemonlist::aredlOfficial
+                     : listMode == 3 ? IntegratedDemonlist::challengeList
                      :                 IntegratedDemonlist::aredl;
     if (query.empty()) {
         m_fullSearchResults.reserve(sourceList.size());

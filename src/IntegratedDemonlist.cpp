@@ -6,10 +6,12 @@ using namespace geode::prelude;
 
 std::vector<IDListDemon> IntegratedDemonlist::aredl;
 std::vector<IDDemonPack> IntegratedDemonlist::aredlPacks;
-std::vector<IDListDemon> IntegratedDemonlist::pemonlist;
+std::vector<IDListDemon> IntegratedDemonlist::aredlOfficial;
+std::vector<IDListDemon> IntegratedDemonlist::challengeList;
 std::vector<IDListDemon> IntegratedDemonlist::allList;
 bool IntegratedDemonlist::aredlLoaded = false;
-bool IntegratedDemonlist::pemonlistLoaded = false;
+bool IntegratedDemonlist::aredlOfficialLoaded = false;
+bool IntegratedDemonlist::challengeListLoaded = false;
 bool IntegratedDemonlist::allListLoaded = false;
 
 static constexpr const char* DEMONLIST_BASE = "https://list-production-2b7d.up.railway.app";
@@ -77,32 +79,36 @@ void IntegratedDemonlist::loadAREDLPacks(TaskHolder<web::WebResponse>& listener,
     success();
 }
 
-void IntegratedDemonlist::loadPemonlist(TaskHolder<web::WebResponse>& listener, Function<void()> success, CopyableFunction<void(int)> failure) {
+void IntegratedDemonlist::loadAREDLOfficial(TaskHolder<web::WebResponse>& listener, Function<void()> success, CopyableFunction<void(int)> failure) {
+    aredlOfficialLoaded = false;
+    aredlOfficial.clear();
+
     listener.spawn(
-        web::WebRequest().get("https://pemonlist.com/api/list?limit=150&version=2"),
+        web::WebRequest().get("https://api.aredl.net/v2/api/aredl/levels"),
         [failure = std::move(failure), success = std::move(success)](web::WebResponse res) mutable {
             if (!res.ok()) return failure(res.code());
 
-            pemonlistLoaded = true;
-            pemonlist.clear();
+            for (auto& level : jasmine::web::getArray(res)) {
+                auto legacy = level.get<bool>("legacy");
+                if (legacy.isOk() && legacy.unwrap()) continue;
 
-            for (auto& level : jasmine::web::getArray(res, "data")) {
                 auto id = level.get<int>("level_id");
                 if (!id.isOk()) continue;
-
-                auto position = level.get<int>("placement");
+                auto position = level.get<int>("position");
                 if (!position.isOk()) continue;
-
                 auto name = level.get<std::string>("name");
                 if (!name.isOk()) continue;
 
                 IDListDemon demon(id.unwrap(), position.unwrap(), std::move(name).unwrap());
-
-                pemonlist.insert(std::ranges::upper_bound(pemonlist, demon, [](const IDListDemon& a, const IDListDemon& b) {
-                    return a.position < b.position;
-                }), std::move(demon));
+                IntegratedDemonlist::aredlOfficial.insert(
+                    std::ranges::upper_bound(IntegratedDemonlist::aredlOfficial, demon, [](const IDListDemon& a, const IDListDemon& b) {
+                        return a.position < b.position;
+                    }),
+                    std::move(demon)
+                );
             }
 
+            IntegratedDemonlist::aredlOfficialLoaded = true;
             success();
         }
     );
@@ -146,6 +152,66 @@ static int parseTier(const std::string& tierStr) {
         } catch (...) {}
     }
     return 0;
+}
+
+static void loadChallengeListPage(
+    TaskHolder<web::WebResponse>* listener,
+    int afterId,
+    Function<void()> success,
+    CopyableFunction<void(int)> failure
+) {
+    std::string url = "https://challengelist.gd/api/v2/demons/?limit=100";
+    if (afterId > 0) url += fmt::format("&after={}", afterId);
+
+    listener->spawn(
+        web::WebRequest().get(url),
+        [listener, failure = std::move(failure), success = std::move(success)](web::WebResponse res) mutable {
+            if (!res.ok()) return failure(res.code());
+
+            int lastId = 0;
+            int count = 0;
+
+            for (auto& level : jasmine::web::getArray(res)) {
+                count++;
+
+                auto hidden = level.get<bool>("hidden");
+                if (hidden.isOk() && hidden.unwrap()) continue;
+
+                auto internalId = level.get<int>("id");
+                if (internalId.isOk()) lastId = internalId.unwrap();
+
+                auto level_id = level.get<int>("level_id");
+                if (!level_id.isOk()) continue;
+
+                auto position = level.get<int>("position");
+                if (!position.isOk()) continue;
+
+                auto name = level.get<std::string>("name");
+                if (!name.isOk()) continue;
+
+                IDListDemon demon(level_id.unwrap(), position.unwrap(), std::move(name).unwrap());
+                IntegratedDemonlist::challengeList.insert(
+                    std::ranges::upper_bound(IntegratedDemonlist::challengeList, demon, [](const IDListDemon& a, const IDListDemon& b) {
+                        return a.position < b.position;
+                    }),
+                    std::move(demon)
+                );
+            }
+
+            if (count >= 100 && lastId > 0) {
+                loadChallengeListPage(listener, lastId, std::move(success), std::move(failure));
+            } else {
+                IntegratedDemonlist::challengeListLoaded = true;
+                success();
+            }
+        }
+    );
+}
+
+void IntegratedDemonlist::loadChallengeList(TaskHolder<web::WebResponse>& listener, Function<void()> success, CopyableFunction<void(int)> failure) {
+    challengeListLoaded = false;
+    challengeList.clear();
+    loadChallengeListPage(&listener, 0, std::move(success), std::move(failure));
 }
 
 static const std::array<const char*, 6> ALL_LIST_URLS = {

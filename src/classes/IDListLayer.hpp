@@ -7,7 +7,7 @@ class IDListLayer : public cocos2d::CCLayer, SetIDPopupDelegate, LevelManagerDel
 public:
     static IDListLayer* create();
     static cocos2d::CCScene* scene();
-    static cocos2d::CCScene* scene(int mode); // 0=MSCL, 1=Pemonlist, 2=ALL
+    static cocos2d::CCScene* scene(int mode); // 0=MSCL, 1=ALL, 2=AREDL, 3=CL
 
     void page(int);
     void keyDown(cocos2d::enumKeyCodes, double) override;
@@ -16,7 +16,8 @@ public:
     ~IDListLayer() override;
 protected:
     geode::async::TaskHolder<geode::utils::web::WebResponse> m_aredlListener;
-    geode::async::TaskHolder<geode::utils::web::WebResponse> m_pemonlistListener;
+    geode::async::TaskHolder<geode::utils::web::WebResponse> m_aredlOfficialListener;
+    geode::async::TaskHolder<geode::utils::web::WebResponse> m_challengeListListener;
     std::array<geode::async::TaskHolder<geode::utils::web::WebResponse>, 6> m_allListListeners;
     GJListLayer* m_list;
     cocos2d::CCLabelBMFont* m_listLabel;
@@ -33,14 +34,16 @@ protected:
     CCMenuItemSpriteExtra* m_firstButton;
     CCMenuItemSpriteExtra* m_lastButton;
     CCMenuItemSpriteExtra* m_starToggle;
-    CCMenuItemSpriteExtra* m_moonToggle;
     CCMenuItemSpriteExtra* m_allToggle;
+    CCMenuItemSpriteExtra* m_aredlToggle;
+    CCMenuItemSpriteExtra* m_clToggle;
     CCMenuItemSpriteExtra* m_searchButton;
     int m_page = 0;
     std::string m_query;
     std::vector<std::string> m_fullSearchResults;
     geode::CopyableFunction<void(int)> m_aredlFailure;
-    geode::CopyableFunction<void(int)> m_pemonlistFailure;
+    geode::CopyableFunction<void(int)> m_aredlOfficialFailure;
+    geode::CopyableFunction<void(int)> m_clFailure;
     geode::CopyableFunction<void(int)> m_allListFailure;
 
     bool init() override;
@@ -51,8 +54,9 @@ protected:
     void onNextPage(cocos2d::CCObject*);
     void onRefresh(cocos2d::CCObject*);
     void onStar(cocos2d::CCObject*);
-    void onMoon(cocos2d::CCObject*);
     void onAll(cocos2d::CCObject*);
+    void onAREDL(cocos2d::CCObject*);
+    void onCL(cocos2d::CCObject*);
     void onPage(cocos2d::CCObject*);
     void onRandom(cocos2d::CCObject*);
     void onFirst(cocos2d::CCObject*);
