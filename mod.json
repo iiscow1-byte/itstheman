@@ -23,7 +23,7 @@
     "settings": {
         "show-mscl": {
             "name": "Show MSCL",
-            "description": "Whether to show the MSCL (Mode Select Classic List) as a list option and in level rank badges.",
+            "description": "Whether to show the MSCL as a list option and in level rank badges.",
             "type": "bool",
             "default": false
         },

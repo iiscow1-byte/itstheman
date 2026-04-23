@@ -9,7 +9,7 @@ Multi list integrator, based off of this mod (https://github.com/hiimjasmine00/I
 - Gives unrated levels on the ALL the demon icon that roughly corresponds to their difficulty
 
 ## Credits
-- gerg - Creator of the mod, used claude for most of the code
+- gerg - Creator of the mod, mostly vibecoded
 
 ## License
 Do whatever you want with this idc
