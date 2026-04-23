@@ -9,6 +9,7 @@ public:
     static cocos2d::CCScene* scene();
     static cocos2d::CCScene* scene(int mode); // 0=MSCL, 1=ALL, 2=AREDL, 3=CL
 
+    void switchList(int mode);
     void page(int);
     void keyDown(cocos2d::enumKeyCodes, double) override;
     void keyBackClicked() override;
@@ -33,10 +34,6 @@ protected:
     CCMenuItemSpriteExtra* m_randomButton;
     CCMenuItemSpriteExtra* m_firstButton;
     CCMenuItemSpriteExtra* m_lastButton;
-    CCMenuItemSpriteExtra* m_starToggle;
-    CCMenuItemSpriteExtra* m_allToggle;
-    CCMenuItemSpriteExtra* m_aredlToggle;
-    CCMenuItemSpriteExtra* m_clToggle;
     CCMenuItemSpriteExtra* m_searchButton;
     int m_page = 0;
     std::string m_query;
@@ -47,16 +44,12 @@ protected:
     geode::CopyableFunction<void(int)> m_allListFailure;
 
     bool init() override;
-    void setListMode(int mode);
     void onSearch(cocos2d::CCObject*);
     void onBack(cocos2d::CCObject*);
+    void onListPicker(cocos2d::CCObject*);
     void onPrevPage(cocos2d::CCObject*);
     void onNextPage(cocos2d::CCObject*);
     void onRefresh(cocos2d::CCObject*);
-    void onStar(cocos2d::CCObject*);
-    void onAll(cocos2d::CCObject*);
-    void onAREDL(cocos2d::CCObject*);
-    void onCL(cocos2d::CCObject*);
     void onPage(cocos2d::CCObject*);
     void onRandom(cocos2d::CCObject*);
     void onFirst(cocos2d::CCObject*);

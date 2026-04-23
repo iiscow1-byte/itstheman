@@ -8,10 +8,106 @@
 #include <Geode/binding/LoadingCircle.hpp>
 #include <Geode/binding/SetIDPopup.hpp>
 #include <Geode/loader/Mod.hpp>
+#include <Geode/ui/Popup.hpp>
 #include <Geode/utils/random.hpp>
 #include <jasmine/search.hpp>
 
 using namespace geode::prelude;
+
+// 0 = MSCL, 1 = ALL, 2 = AREDL, 3 = CL
+int listMode = 0;
+
+constexpr std::string_view aredlInfo =
+    "The <cg>MSCL</c> is an <cp>unofficial ranking</c> "
+    "of <cj>classic mode</c> <cr>extreme demons</c> in Geometry Dash.";
+constexpr std::string_view allListInfo =
+    "The <cg>ALL</c> list is a ranking of <cr>extreme demons</c> in Geometry Dash "
+    "ordered by difficulty across <cj>6 sublists</c>.";
+constexpr std::string_view aredlOfficialInfo =
+    "The <cg>AREDL</c> (All Rated Extreme Demon List) is a community ranking "
+    "of <cr>extreme demons</c> in Geometry Dash.";
+constexpr std::string_view challengeListInfo =
+    "The <cg>Challenge List</c> is a community ranking "
+    "of <cr>challenges</c> in Geometry Dash.";
+
+class IDListPickerPopup : public geode::Popup {
+    IDListLayer* m_listLayer = nullptr;
+
+    bool initPopup() {
+        if (!geode::Popup::init(230.f, 175.f)) return false;
+        setTitle("Select List");
+
+        auto menu = CCMenu::create();
+        menu->setPosition(m_mainLayer->getContentSize() / 2.f - CCPoint { 0.f, 10.f });
+        m_mainLayer->addChild(menu);
+
+        // Top row: MSCL (optional), AREDL
+        if (Mod::get()->getSettingValue<bool>("show-mscl")) {
+            auto msclBg = CCScale9Sprite::create("GJ_button_01.png");
+            msclBg->setContentSize({ 82.f, 55.f });
+            auto starSpr = CCSprite::createWithSpriteFrameName("GJ_starsIcon_001.png");
+            starSpr->setPosition({ 41.f, 35.f });
+            msclBg->addChild(starSpr);
+            auto msclLabel = CCLabelBMFont::create("MSCL", "bigFont.fnt");
+            msclLabel->setScale(0.5f);
+            msclLabel->setPosition({ 41.f, 12.f });
+            msclBg->addChild(msclLabel);
+            auto msclBtn = CCMenuItemSpriteExtra::create(msclBg, this, menu_selector(IDListPickerPopup::onMSCL));
+            msclBtn->setPosition({ -48.f, 32.f });
+            menu->addChild(msclBtn);
+        }
+
+        auto aredlBg = CCScale9Sprite::create("GJ_button_01.png");
+        aredlBg->setContentSize({ 82.f, 55.f });
+        auto aredlLabel = CCLabelBMFont::create("AREDL", "bigFont.fnt");
+        aredlLabel->setScale(0.5f);
+        aredlLabel->setPosition({ 41.f, 27.f });
+        aredlBg->addChild(aredlLabel);
+        auto aredlBtn = CCMenuItemSpriteExtra::create(aredlBg, this, menu_selector(IDListPickerPopup::onAREDL));
+        aredlBtn->setPosition({ Mod::get()->getSettingValue<bool>("show-mscl") ? 48.f : 0.f, 32.f });
+        menu->addChild(aredlBtn);
+
+        // Bottom row: CL, ALL
+        auto clBg = CCScale9Sprite::create("GJ_button_01.png");
+        clBg->setContentSize({ 82.f, 55.f });
+        auto clLabel = CCLabelBMFont::create("CL", "bigFont.fnt");
+        clLabel->setScale(0.65f);
+        clLabel->setPosition({ 41.f, 27.f });
+        clBg->addChild(clLabel);
+        auto clBtn = CCMenuItemSpriteExtra::create(clBg, this, menu_selector(IDListPickerPopup::onCL));
+        clBtn->setPosition({ -48.f, -32.f });
+        menu->addChild(clBtn);
+
+        auto allBg = CCScale9Sprite::create("GJ_button_01.png");
+        allBg->setContentSize({ 82.f, 55.f });
+        auto allLabel = CCLabelBMFont::create("ALL", "bigFont.fnt");
+        allLabel->setScale(0.65f);
+        allLabel->setPosition({ 41.f, 27.f });
+        allBg->addChild(allLabel);
+        auto allBtn = CCMenuItemSpriteExtra::create(allBg, this, menu_selector(IDListPickerPopup::onAll));
+        allBtn->setPosition({ 48.f, -32.f });
+        menu->addChild(allBtn);
+
+        return true;
+    }
+
+    void onMSCL(CCObject*)  { onClose(nullptr); m_listLayer->switchList(0); }
+    void onAREDL(CCObject*) { onClose(nullptr); m_listLayer->switchList(2); }
+    void onCL(CCObject*)    { onClose(nullptr); m_listLayer->switchList(3); }
+    void onAll(CCObject*)   { onClose(nullptr); m_listLayer->switchList(1); }
+
+public:
+    static IDListPickerPopup* create(IDListLayer* layer) {
+        auto ret = new IDListPickerPopup();
+        ret->m_listLayer = layer;
+        if (ret->initPopup()) {
+            ret->autorelease();
+            return ret;
+        }
+        delete ret;
+        return nullptr;
+    }
+};
 
 IDListLayer* IDListLayer::create() {
     auto ret = new IDListLayer();
@@ -30,29 +126,15 @@ CCScene* IDListLayer::scene() {
     return ret;
 }
 
-// 0 = MSCL, 1 = ALL, 2 = AREDL, 3 = CL
-int listMode = 0;
-
 CCScene* IDListLayer::scene(int mode) {
     listMode = mode;
     return scene();
 }
 
-constexpr std::string_view aredlInfo =
-    "The <cg>MSCL</c> is an <cp>unofficial ranking</c> "
-    "of <cj>classic mode</c> <cr>extreme demons</c> in Geometry Dash.";
-constexpr std::string_view allListInfo =
-    "The <cg>ALL</c> list is a ranking of <cr>extreme demons</c> in Geometry Dash "
-    "ordered by difficulty across <cj>6 sublists</c>.";
-constexpr std::string_view aredlOfficialInfo =
-    "The <cg>AREDL</c> (All Rated Extreme Demon List) is a community ranking "
-    "of <cr>extreme demons</c> in Geometry Dash.";
-constexpr std::string_view challengeListInfo =
-    "The <cg>Challenge List</c> is a community ranking "
-    "of <cr>challenges</c> in Geometry Dash.";
-
 bool IDListLayer::init() {
     if (!CCLayer::init()) return false;
+
+    if (listMode == 0 && !Mod::get()->getSettingValue<bool>("show-mscl")) listMode = 2;
 
     setID("IDListLayer");
     auto winSize = CCDirector::get()->getWinSize();
@@ -154,6 +236,14 @@ bool IDListLayer::init() {
     m_infoButton->setID("info-button");
     menu->addChild(m_infoButton, 2);
 
+    // Single back-arrow button to reopen the list picker popup
+    auto listPickerSpr = CCSprite::createWithSpriteFrameName("GJ_arrow_01_001.png");
+    listPickerSpr->setScale(0.6f);
+    auto listPickerBtn = CCMenuItemSpriteExtra::create(listPickerSpr, this, menu_selector(IDListLayer::onListPicker));
+    listPickerBtn->setPosition({ 30.0f, 60.0f });
+    listPickerBtn->setID("list-picker-button");
+    menu->addChild(listPickerBtn, 2);
+
     m_aredlFailure = [this](int code) {
         FLAlertLayer::create(fmt::format("Load Failed ({})", code).c_str(), "Failed to load MSCL. Please try again later.", "OK")->show();
         m_loadingCircle->setVisible(false);
@@ -179,38 +269,6 @@ bool IDListLayer::init() {
     refreshButton->setPosition({ winSize.width - refreshBtnSpr->getContentWidth() / 2.0f - 4.0f, refreshBtnSpr->getContentHeight() / 2.0f + 4.0f });
     refreshButton->setID("refresh-button");
     menu->addChild(refreshButton, 2);
-
-    auto starSprite = CCSprite::createWithSpriteFrameName("GJ_starsIcon_001.png");
-    starSprite->setScale(1.1f);
-    m_starToggle = CCMenuItemSpriteExtra::create(starSprite, this, menu_selector(IDListLayer::onStar));
-    m_starToggle->setPosition({ 30.0f, 60.0f });
-    m_starToggle->setColor(listMode == 0 ? ccColor3B { 255, 255, 255 } : ccColor3B { 125, 125, 125 });
-    m_starToggle->setID("aredl-button");
-    menu->addChild(m_starToggle, 2);
-
-    auto allLabel = CCLabelBMFont::create("ALL", "bigFont.fnt");
-    allLabel->setScale(0.5f);
-    m_allToggle = CCMenuItemSpriteExtra::create(allLabel, this, menu_selector(IDListLayer::onAll));
-    m_allToggle->setPosition({ 60.0f, 60.0f });
-    m_allToggle->setColor(listMode == 1 ? ccColor3B { 255, 255, 255 } : ccColor3B { 125, 125, 125 });
-    m_allToggle->setID("all-button");
-    menu->addChild(m_allToggle, 2);
-
-    auto aredlLabel = CCLabelBMFont::create("AREDL", "bigFont.fnt");
-    aredlLabel->setScale(0.35f);
-    m_aredlToggle = CCMenuItemSpriteExtra::create(aredlLabel, this, menu_selector(IDListLayer::onAREDL));
-    m_aredlToggle->setPosition({ 90.0f, 60.0f });
-    m_aredlToggle->setColor(listMode == 2 ? ccColor3B { 255, 255, 255 } : ccColor3B { 125, 125, 125 });
-    m_aredlToggle->setID("aredl-official-button");
-    menu->addChild(m_aredlToggle, 2);
-
-    auto clLabel = CCLabelBMFont::create("CL", "bigFont.fnt");
-    clLabel->setScale(0.5f);
-    m_clToggle = CCMenuItemSpriteExtra::create(clLabel, this, menu_selector(IDListLayer::onCL));
-    m_clToggle->setPosition({ 120.0f, 60.0f });
-    m_clToggle->setColor(listMode == 3 ? ccColor3B { 255, 255, 255 } : ccColor3B { 125, 125, 125 });
-    m_clToggle->setID("cl-button");
-    menu->addChild(m_clToggle, 2);
 
     auto pageBtnSpr = CCSprite::create("GJ_button_02.png");
     pageBtnSpr->setScale(0.7f);
@@ -289,6 +347,38 @@ void IDListLayer::onBack(CCObject* sender) {
     CCDirector::get()->popSceneWithTransition(0.5f, kPopTransitionFade);
 }
 
+void IDListLayer::onListPicker(CCObject* sender) {
+    IDListPickerPopup::create(this)->show();
+}
+
+void IDListLayer::switchList(int mode) {
+    if (listMode == mode) return;
+    listMode = mode;
+    showLoading();
+    const char* title = mode == 1 ? "ALL" : mode == 2 ? "AREDL" : mode == 3 ? "CL" : "MSCL";
+    if (auto listTitle = static_cast<CCLabelBMFont*>(m_list->getChildByID("title"))) {
+        listTitle->setString(title);
+        listTitle->limitLabelWidth(280.0f, 0.8f, 0.0f);
+    }
+    m_infoButton->m_title = title;
+    auto& infoDesc = mode == 1 ? allListInfo : mode == 2 ? aredlOfficialInfo : mode == 3 ? challengeListInfo : aredlInfo;
+    m_infoButton->m_description = gd::string(infoDesc.data(), infoDesc.size());
+    m_fullSearchResults.clear();
+    if (mode == 1) {
+        if (IntegratedDemonlist::allListLoaded) page(0);
+        else IntegratedDemonlist::loadAllList(m_allListListeners, [this] { page(0); }, m_allListFailure);
+    } else if (mode == 2) {
+        if (IntegratedDemonlist::aredlOfficialLoaded) page(0);
+        else IntegratedDemonlist::loadAREDLOfficial(m_aredlOfficialListener, [this] { page(0); }, m_aredlOfficialFailure);
+    } else if (mode == 3) {
+        if (IntegratedDemonlist::challengeListLoaded) page(0);
+        else IntegratedDemonlist::loadChallengeList(m_challengeListListener, [this] { page(0); }, m_clFailure);
+    } else {
+        if (IntegratedDemonlist::aredlLoaded) page(0);
+        else IntegratedDemonlist::loadAREDL(m_aredlListener, [this] { page(0); }, m_aredlFailure);
+    }
+}
+
 void IDListLayer::onPrevPage(CCObject* sender) {
     page(m_page - 1);
 }
@@ -308,74 +398,6 @@ void IDListLayer::onRefresh(CCObject* sender) {
     } else {
         IntegratedDemonlist::loadAREDL(m_aredlListener, [this] { populateList(m_query); }, m_aredlFailure);
     }
-}
-
-void IDListLayer::setListMode(int mode) {
-    listMode = mode;
-    m_starToggle->setColor(mode == 0 ? ccColor3B { 255, 255, 255 } : ccColor3B { 125, 125, 125 });
-    m_allToggle->setColor(mode == 1 ? ccColor3B { 255, 255, 255 } : ccColor3B { 125, 125, 125 });
-    m_aredlToggle->setColor(mode == 2 ? ccColor3B { 255, 255, 255 } : ccColor3B { 125, 125, 125 });
-    m_clToggle->setColor(mode == 3 ? ccColor3B { 255, 255, 255 } : ccColor3B { 125, 125, 125 });
-}
-
-void IDListLayer::onStar(CCObject* sender) {
-    if (listMode == 0) return;
-    setListMode(0);
-    showLoading();
-    if (auto listTitle = static_cast<CCLabelBMFont*>(m_list->getChildByID("title"))) {
-        listTitle->setString("MSCL");
-        listTitle->limitLabelWidth(280.0f, 0.8f, 0.0f);
-    }
-    m_infoButton->m_title = "MSCL";
-    m_infoButton->m_description = gd::string(aredlInfo.data(), aredlInfo.size());
-    m_fullSearchResults.clear();
-    if (IntegratedDemonlist::aredlLoaded) page(0);
-    else IntegratedDemonlist::loadAREDL(m_aredlListener, [this] { page(0); }, m_aredlFailure);
-}
-
-void IDListLayer::onAll(CCObject* sender) {
-    if (listMode == 1) return;
-    setListMode(1);
-    showLoading();
-    if (auto listTitle = static_cast<CCLabelBMFont*>(m_list->getChildByID("title"))) {
-        listTitle->setString("ALL");
-        listTitle->limitLabelWidth(280.0f, 0.8f, 0.0f);
-    }
-    m_infoButton->m_title = "ALL";
-    m_infoButton->m_description = gd::string(allListInfo.data(), allListInfo.size());
-    m_fullSearchResults.clear();
-    if (IntegratedDemonlist::allListLoaded) page(0);
-    else IntegratedDemonlist::loadAllList(m_allListListeners, [this] { page(0); }, m_allListFailure);
-}
-
-void IDListLayer::onAREDL(CCObject* sender) {
-    if (listMode == 2) return;
-    setListMode(2);
-    showLoading();
-    if (auto listTitle = static_cast<CCLabelBMFont*>(m_list->getChildByID("title"))) {
-        listTitle->setString("AREDL");
-        listTitle->limitLabelWidth(280.0f, 0.8f, 0.0f);
-    }
-    m_infoButton->m_title = "AREDL";
-    m_infoButton->m_description = gd::string(aredlOfficialInfo.data(), aredlOfficialInfo.size());
-    m_fullSearchResults.clear();
-    if (IntegratedDemonlist::aredlOfficialLoaded) page(0);
-    else IntegratedDemonlist::loadAREDLOfficial(m_aredlOfficialListener, [this] { page(0); }, m_aredlOfficialFailure);
-}
-
-void IDListLayer::onCL(CCObject* sender) {
-    if (listMode == 3) return;
-    setListMode(3);
-    showLoading();
-    if (auto listTitle = static_cast<CCLabelBMFont*>(m_list->getChildByID("title"))) {
-        listTitle->setString("CL");
-        listTitle->limitLabelWidth(280.0f, 0.8f, 0.0f);
-    }
-    m_infoButton->m_title = "CL";
-    m_infoButton->m_description = gd::string(challengeListInfo.data(), challengeListInfo.size());
-    m_fullSearchResults.clear();
-    if (IntegratedDemonlist::challengeListLoaded) page(0);
-    else IntegratedDemonlist::loadChallengeList(m_challengeListListener, [this] { page(0); }, m_clFailure);
 }
 
 void IDListLayer::onPage(CCObject* sender) {

@@ -1,6 +1,7 @@
 #include "../IntegratedDemonlist.hpp"
 #include <Geode/binding/GJDifficultySprite.hpp>
 #include <Geode/binding/GJGameLevel.hpp>
+#include <Geode/loader/Mod.hpp>
 #include <Geode/modify/LevelCell.hpp>
 #include <Geode/utils/StringBuffer.hpp>
 #include <jasmine/hook.hpp>
@@ -39,12 +40,15 @@ class $modify(IDLevelCell, LevelCell) {
         auto difficulty = level->m_demonDifficulty;
         bool isRatedDemon = level->m_demon.value() > 0 && difficulty >= 6;
 
+        bool showMscl = Mod::get()->getSettingValue<bool>("show-mscl");
         if (isRatedDemon) {
             std::vector<int> positions;
-            for (auto& demon : IntegratedDemonlist::aredl) {
-                if (demon.id == levelID) positions.push_back(demon.position);
+            if (showMscl) {
+                for (auto& demon : IntegratedDemonlist::aredl) {
+                    if (demon.id == levelID) positions.push_back(demon.position);
+                }
+                if (!positions.empty()) return addRank(positions);
             }
-            if (!positions.empty()) return addRank(positions);
 
             for (auto& demon : IntegratedDemonlist::aredlOfficial) {
                 if (demon.id == levelID) { positions.push_back(demon.position); break; }
@@ -60,6 +64,7 @@ class $modify(IDLevelCell, LevelCell) {
                 if (demon.id == levelID) return addRankALL({ demon.position });
             }
 
+            if (!showMscl) return;
             if (loadedDemons.contains(levelID)) return;
             loadedDemons.insert(levelID);
 
@@ -95,8 +100,10 @@ class $modify(IDLevelCell, LevelCell) {
         } else {
             // Unrated level — change difficulty icon if it has a valid tier in any demonlist
             int tier = -1;
-            for (auto& demon : IntegratedDemonlist::aredl) {
-                if (demon.id == levelID) { tier = demon.tier; break; }
+            if (showMscl) {
+                for (auto& demon : IntegratedDemonlist::aredl) {
+                    if (demon.id == levelID) { tier = demon.tier; break; }
+                }
             }
             if (tier <= 0) for (auto& demon : IntegratedDemonlist::aredlOfficial) {
                 if (demon.id == levelID) { tier = demon.tier; break; }

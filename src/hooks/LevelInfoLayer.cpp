@@ -2,6 +2,7 @@
 #include <Geode/binding/GJDifficultySprite.hpp>
 #include <Geode/binding/GJGameLevel.hpp>
 #include <Geode/binding/LevelInfoLayer.hpp>
+#include <Geode/loader/Mod.hpp>
 #include <Geode/modify/LevelInfoLayer.hpp>
 #include <jasmine/web.hpp>
 
@@ -22,16 +23,18 @@ static GJDifficulty difficultyForTier(int tier) {
 }
 
 static const char* nameForTier(int tier) {
-    if (tier > 20) return "Extreme Demon";
-    if (tier >= 15) return "Insane Demon";
-    if (tier >= 10) return "Hard Demon";
-    if (tier >= 5)  return "Medium Demon";
-    return "Easy Demon";
+    if (tier > 20) return "Unrated Extreme Demon";
+    if (tier >= 15) return "Unrated Insane Demon";
+    if (tier >= 10) return "Unrated Hard Demon";
+    if (tier >= 5)  return "Unrated Medium Demon";
+    return "Unrated Easy Demon";
 }
 
 class $modify(IDLevelInfoLayer, LevelInfoLayer) {
     struct Fields {
         TaskHolder<web::WebResponse> m_listener;
+        std::vector<RankInfo> m_ranks;
+        bool m_isUnrated = false;
     };
 
     bool init(GJGameLevel* level, bool challenge) {
@@ -39,11 +42,15 @@ class $modify(IDLevelInfoLayer, LevelInfoLayer) {
 
         auto levelID = level->m_levelID.value();
         bool isUnrated = level->m_demon.value() <= 0;
+        m_fields->m_isUnrated = isUnrated;
 
         if (!level->isPlatformer()) {
+            bool showMscl = Mod::get()->getSettingValue<bool>("show-mscl");
             std::vector<RankInfo> ranks;
-            for (auto& demon : IntegratedDemonlist::aredl) {
-                if (demon.id == levelID) { ranks.push_back({demon.position, demon.tier, "MSCL"}); break; }
+            if (showMscl) {
+                for (auto& demon : IntegratedDemonlist::aredl) {
+                    if (demon.id == levelID) { ranks.push_back({demon.position, demon.tier, "MSCL"}); break; }
+                }
             }
             for (auto& demon : IntegratedDemonlist::aredlOfficial) {
                 if (demon.id == levelID) { ranks.push_back({demon.position, demon.tier, "AREDL"}); break; }
@@ -54,8 +61,12 @@ class $modify(IDLevelInfoLayer, LevelInfoLayer) {
             for (auto& demon : IntegratedDemonlist::allList) {
                 if (demon.id == levelID) { ranks.push_back({demon.position, demon.tier, "ALL"}); break; }
             }
-            if (!ranks.empty()) { addDemonlistBadges(false, ranks, isUnrated); return true; }
-            if (IntegratedDemonlist::aredlLoaded) return true;
+            if (!ranks.empty()) {
+                m_fields->m_ranks = ranks;
+                addDemonlistBadges(false, ranks, isUnrated);
+                return true;
+            }
+            if (IntegratedDemonlist::aredlLoaded || !showMscl) return true;
 
             m_fields->m_listener.spawn(
                 web::WebRequest().get(
@@ -75,6 +86,7 @@ class $modify(IDLevelInfoLayer, LevelInfoLayer) {
                     }
                     if (position == -1) return;
 
+                    m_fields->m_ranks = {{position, tier, "MSCL"}};
                     addDemonlistBadges(false, {{position, tier, "MSCL"}}, isUnrated);
                 }
             );
@@ -83,16 +95,28 @@ class $modify(IDLevelInfoLayer, LevelInfoLayer) {
         return true;
     }
 
+    void levelDownloadFinished(GJGameLevel* level) override {
+        LevelInfoLayer::levelDownloadFinished(level);
+        if (!m_fields->m_ranks.empty()) {
+            // Re-check rated status from refreshed level data
+            m_fields->m_isUnrated = m_level->m_demon.value() <= 0;
+            addDemonlistBadges(false, m_fields->m_ranks, m_fields->m_isUnrated);
+        }
+    }
+
     void addDemonlistBadges(bool platformer, const std::vector<RankInfo>& entries, bool isUnrated = false) {
         auto diffSpr = m_difficultySprite;
         if (!diffSpr) return;
         auto parent = diffSpr->getParent();
         if (!parent) return;
 
+        // Remove any previously added badges to avoid duplicates on re-apply
+        while (auto node = parent->getChildByID("demonlist-tier-icon"_spr)) node->removeFromParent();
+        while (auto node = parent->getChildByID("demonlist-rank-label"_spr)) node->removeFromParent();
+
         auto diffPos = diffSpr->getPosition();
         int z = diffSpr->getZOrder();
 
-        // For unrated levels, update the difficulty icon and label based on tier
         if (isUnrated && !platformer) {
             int tier = -1;
             for (auto& entry : entries) {
@@ -103,12 +127,19 @@ class $modify(IDLevelInfoLayer, LevelInfoLayer) {
                 if (auto diffLabel = typeinfo_cast<CCLabelBMFont*>(parent->getChildByID("difficulty-label"))) {
                     diffLabel->setString(nameForTier(tier));
                 }
+                // Shift coins down to prevent overlap with the longer difficulty label
+                if (m_coins) {
+                    for (uint32_t i = 0; i < m_coins->count(); i++) {
+                        if (auto coin = typeinfo_cast<CCNode*>(m_coins->objectAtIndex(i))) {
+                            coin->setPositionY(coin->getPositionY() - 15.0f);
+                        }
+                    }
+                }
             }
         }
 
         float diffHalfW = diffSpr->getScaledContentWidth() * 0.5f;
 
-        // Tier icon to the left of the difficulty sprite (use first entry with a valid tier)
         CCSprite* tierSpr = nullptr;
         if (!platformer) {
             for (auto& entry : entries) {
@@ -126,7 +157,6 @@ class $modify(IDLevelInfoLayer, LevelInfoLayer) {
             }
         }
 
-        // Rank labels stack below the tier icon, right-aligned to the left of the difficulty sprite
         float rightX = diffPos.x - diffHalfW - 4.0f;
         float currentY = tierSpr
             ? tierSpr->getPositionY() - tierSpr->getScaledContentHeight() * 0.5f - 6.0f

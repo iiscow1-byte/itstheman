@@ -28,7 +28,14 @@
       "PowerShell(& \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" \"c:\\\\Users\\\\gerg1\\\\Documents\\\\code\\\\MSCL\\\\allmod\\\\build\\\\IntegratedDemonlist.vcxproj\" /p:Configuration=RelWithDebInfo /p:Platform=x64 /v:minimal 2>&1 | Where-Object { $_ -match \"error C|error LNK\" } | Select-Object -Last 30)",
       "WebFetch(domain:docs.google.com)",
       "Bash(awk '/^class GJGameLevel/,/^}/' \"c:/Users/gerg1/Documents/code/MSCL/allmod/build/_deps/bindings-src/bindings/2.2081/GeometryDash.bro\")",
-      "Bash(awk '/^class LevelInfoLayer/,/^}/' \"c:/Users/gerg1/Documents/code/MSCL/allmod/build/_deps/bindings-src/bindings/2.2081/GeometryDash.bro\")"
+      "Bash(awk '/^class LevelInfoLayer/,/^}/' \"c:/Users/gerg1/Documents/code/MSCL/allmod/build/_deps/bindings-src/bindings/2.2081/GeometryDash.bro\")",
+      "PowerShell($msbuild = \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\"; & $msbuild \"c:\\\\Users\\\\gerg1\\\\Documents\\\\code\\\\MSCL\\\\itstheman\\\\build\\\\IntegratedDemonlist.sln\" /p:Configuration=RelWithDebInfo /p:Platform=x64 /t:IntegratedDemonlist /m 2>&1 | Select-Object -Last 40)",
+      "PowerShell($msbuild = \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\"; & $msbuild \"c:\\\\Users\\\\gerg1\\\\Documents\\\\code\\\\MSCL\\\\itstheman\\\\build\\\\IntegratedDemonlist.sln\" /p:Configuration=RelWithDebInfo /p:Platform=x64 /t:IntegratedDemonlist /m 2>&1 | Where-Object { $_ -match \"error|warning C\" } | Select-Object -Last 20)",
+      "PowerShell($msbuild = \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\"; & $msbuild \"c:\\\\Users\\\\gerg1\\\\Documents\\\\code\\\\MSCL\\\\itstheman\\\\build\\\\IntegratedDemonlist.sln\" /p:Configuration=RelWithDebInfo /p:Platform=x64 /t:IntegratedDemonlist /m 2>&1 | Select-Object -Last 15)",
+      "Bash(cd /tmp)",
+      "Bash(cp \"c:/Users/gerg1/AppData/Local/Temp/geode.node-ids.geode\" node-ids.zip)",
+      "Bash(unzip -l node-ids.zip)",
+      "PowerShell($msbuild = \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\"; & $msbuild \"c:\\\\Users\\\\gerg1\\\\Documents\\\\code\\\\MSCL\\\\itstheman\\\\build\\\\IntegratedDemonlist.sln\" /p:Configuration=RelWithDebInfo /p:Platform=x64 /t:IntegratedDemonlist /m 2>&1 | Select-Object -Last 8)"
     ]
   }
 }

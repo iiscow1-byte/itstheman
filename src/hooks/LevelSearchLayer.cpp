@@ -1,4 +1,5 @@
 #include "../classes/IDListLayer.hpp"
+#include <Geode/loader/Mod.hpp>
 #include <Geode/modify/LevelSearchLayer.hpp>
 #include <Geode/ui/BasedButtonSprite.hpp>
 #include <Geode/ui/Popup.hpp>
@@ -26,20 +27,22 @@ private:
         menu->setPosition(m_mainLayer->getContentSize() / 2.f - CCPoint { 0.f, 10.f });
         m_mainLayer->addChild(menu);
 
-        // Top row: MSCL, AREDL
-        auto msclBg = CCScale9Sprite::create("GJ_button_01.png");
-        msclBg->setContentSize({ 82.f, 55.f });
-        auto starSpr = CCSprite::createWithSpriteFrameName("GJ_starsIcon_001.png");
-        starSpr->setScale(1.0f);
-        starSpr->setPosition({ 41.f, 35.f });
-        msclBg->addChild(starSpr);
-        auto msclLabel = CCLabelBMFont::create("MSCL", "bigFont.fnt");
-        msclLabel->setScale(0.5f);
-        msclLabel->setPosition({ 41.f, 12.f });
-        msclBg->addChild(msclLabel);
-        auto msclBtn = CCMenuItemSpriteExtra::create(msclBg, this, menu_selector(IDListSelectPopup::onMSCL));
-        msclBtn->setPosition({ -48.f, 32.f });
-        menu->addChild(msclBtn);
+        // Top row: MSCL (optional), AREDL
+        if (Mod::get()->getSettingValue<bool>("show-mscl")) {
+            auto msclBg = CCScale9Sprite::create("GJ_button_01.png");
+            msclBg->setContentSize({ 82.f, 55.f });
+            auto starSpr = CCSprite::createWithSpriteFrameName("GJ_starsIcon_001.png");
+            starSpr->setScale(1.0f);
+            starSpr->setPosition({ 41.f, 35.f });
+            msclBg->addChild(starSpr);
+            auto msclLabel = CCLabelBMFont::create("MSCL", "bigFont.fnt");
+            msclLabel->setScale(0.5f);
+            msclLabel->setPosition({ 41.f, 12.f });
+            msclBg->addChild(msclLabel);
+            auto msclBtn = CCMenuItemSpriteExtra::create(msclBg, this, menu_selector(IDListSelectPopup::onMSCL));
+            msclBtn->setPosition({ -48.f, 32.f });
+            menu->addChild(msclBtn);
+        }
 
         auto aredlBg = CCScale9Sprite::create("GJ_button_01.png");
         aredlBg->setContentSize({ 82.f, 55.f });
@@ -48,7 +51,7 @@ private:
         aredlLabel->setPosition({ 41.f, 27.f });
         aredlBg->addChild(aredlLabel);
         auto aredlBtn = CCMenuItemSpriteExtra::create(aredlBg, this, menu_selector(IDListSelectPopup::onAREDL));
-        aredlBtn->setPosition({ 48.f, 32.f });
+        aredlBtn->setPosition({ Mod::get()->getSettingValue<bool>("show-mscl") ? 48.f : 0.f, 32.f });
         menu->addChild(aredlBtn);
 
         // Bottom row: CL, ALL
