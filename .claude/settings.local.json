@@ -35,7 +35,10 @@
       "Bash(cd /tmp)",
       "Bash(cp \"c:/Users/gerg1/AppData/Local/Temp/geode.node-ids.geode\" node-ids.zip)",
       "Bash(unzip -l node-ids.zip)",
-      "PowerShell($msbuild = \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\"; & $msbuild \"c:\\\\Users\\\\gerg1\\\\Documents\\\\code\\\\MSCL\\\\itstheman\\\\build\\\\IntegratedDemonlist.sln\" /p:Configuration=RelWithDebInfo /p:Platform=x64 /t:IntegratedDemonlist /m 2>&1 | Select-Object -Last 8)"
+      "PowerShell($msbuild = \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\"; & $msbuild \"c:\\\\Users\\\\gerg1\\\\Documents\\\\code\\\\MSCL\\\\itstheman\\\\build\\\\IntegratedDemonlist.sln\" /p:Configuration=RelWithDebInfo /p:Platform=x64 /t:IntegratedDemonlist /m 2>&1 | Select-Object -Last 8)",
+      "Bash(cmake --build . --config RelWithDebInfo)",
+      "PowerShell($cmake = @\\(\"C:\\\\Program Files\\\\CMake\\\\bin\\\\cmake.exe\", \"C:\\\\Program Files \\(x86\\)\\\\CMake\\\\bin\\\\cmake.exe\", \"$env:LOCALAPPDATA\\\\Programs\\\\CMake\\\\bin\\\\cmake.exe\"\\) | Where-Object { Test-Path $_ } | Select-Object -First 1; if \\($cmake\\) { Write-Output $cmake } else { Get-ChildItem \"C:\\\\Program Files\" -Filter \"cmake.exe\" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 3 -ExpandProperty FullName })",
+      "PowerShell($cmake = \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\Common7\\\\IDE\\\\CommonExtensions\\\\Microsoft\\\\CMake\\\\CMake\\\\bin\\\\cmake.exe\"; & $cmake --build \"c:\\\\Users\\\\gerg1\\\\Documents\\\\code\\\\Geometry dash\\\\MSCL\\\\itstheman\\\\build\" --config RelWithDebInfo --target IntegratedDemonlist 2>&1 | Select-Object -Last 60)"
     ]
   }
 }

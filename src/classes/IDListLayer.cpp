@@ -15,7 +15,11 @@
 using namespace geode::prelude;
 
 // 0 = MSCL, 1 = ALL, 2 = AREDL, 3 = CL
-int listMode = 0;
+namespace IDListState {
+    int currentMode = 0;
+    bool inListLayer = false;
+}
+static int& listMode = IDListState::currentMode;
 
 constexpr std::string_view aredlInfo =
     "The <cg>MSCL</c> is an <cp>unofficial ranking</c> "
@@ -135,6 +139,7 @@ bool IDListLayer::init() {
     if (!CCLayer::init()) return false;
 
     if (listMode == 0 && !Mod::get()->getSettingValue<bool>("show-mscl")) listMode = 2;
+    IDListState::inListLayer = true;
 
     setID("IDListLayer");
     auto winSize = CCDirector::get()->getWinSize();
@@ -565,4 +570,5 @@ void IDListLayer::setIDPopupClosed(SetIDPopup*, int page) {
 IDListLayer::~IDListLayer() {
     auto glm = GameLevelManager::get();
     if (glm->m_levelManagerDelegate == this) glm->m_levelManagerDelegate = nullptr;
+    IDListState::inListLayer = false;
 }

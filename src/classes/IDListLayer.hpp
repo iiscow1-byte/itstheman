@@ -1,7 +1,13 @@
+#pragma once
 #include <Geode/binding/LevelManagerDelegate.hpp>
 #include <Geode/binding/SetIDPopupDelegate.hpp>
 #include <Geode/ui/TextInput.hpp>
 #include <Geode/utils/web.hpp>
+
+namespace IDListState {
+    extern int currentMode;     // 0=MSCL, 1=ALL, 2=AREDL, 3=CL
+    extern bool inListLayer;
+}
 
 class IDListLayer : public cocos2d::CCLayer, SetIDPopupDelegate, LevelManagerDelegate {
 public:

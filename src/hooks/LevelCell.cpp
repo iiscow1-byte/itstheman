@@ -1,4 +1,5 @@
 #include "../IntegratedDemonlist.hpp"
+#include "../classes/IDListLayer.hpp"
 #include <Geode/binding/GJDifficultySprite.hpp>
 #include <Geode/binding/GJGameLevel.hpp>
 #include <Geode/loader/Mod.hpp>
@@ -12,12 +13,56 @@ using namespace geode::prelude;
 
 std::set<int> loadedDemons;
 
+struct RankResult {
+    std::vector<int> positions;
+    const char* label = nullptr;
+};
+
 static GJDifficulty difficultyForTier(int tier) {
     if (tier > 20) return GJDifficulty::DemonExtreme;
     if (tier >= 15) return GJDifficulty::DemonInsane;
     if (tier >= 10) return GJDifficulty::Demon;
     if (tier >= 5)  return GJDifficulty::DemonMedium;
     return GJDifficulty::DemonEasy;
+}
+
+static int findTierAcrossLists(int levelID) {
+    for (auto& d : IntegratedDemonlist::aredl)         if (d.id == levelID && d.tier >= 0) return d.tier;
+    for (auto& d : IntegratedDemonlist::allList)       if (d.id == levelID && d.tier >= 0) return d.tier;
+    for (auto& d : IntegratedDemonlist::aredlOfficial) if (d.id == levelID && d.tier >= 0) return d.tier;
+    for (auto& d : IntegratedDemonlist::challengeList) if (d.id == levelID && d.tier >= 0) return d.tier;
+    return -1;
+}
+
+static RankResult collectFromList(const std::vector<IDListDemon>& list, int levelID, const char* label, bool multiple) {
+    RankResult r{ {}, label };
+    for (auto& d : list) {
+        if (d.id == levelID) {
+            r.positions.push_back(d.position);
+            if (!multiple) break;
+        }
+    }
+    return r;
+}
+
+static RankResult findRank(int levelID, bool showMscl) {
+    if (IDListState::inListLayer) {
+        switch (IDListState::currentMode) {
+            case 0: { auto r = collectFromList(IntegratedDemonlist::aredl,         levelID, " MSCL",  true);  if (!r.positions.empty()) return r; break; }
+            case 1: { auto r = collectFromList(IntegratedDemonlist::allList,       levelID, " ALL",   false); if (!r.positions.empty()) return r; break; }
+            case 2: { auto r = collectFromList(IntegratedDemonlist::aredlOfficial, levelID, " AREDL", false); if (!r.positions.empty()) return r; break; }
+            case 3: { auto r = collectFromList(IntegratedDemonlist::challengeList, levelID, " CL",    false); if (!r.positions.empty()) return r; break; }
+        }
+    }
+
+    if (showMscl) {
+        auto r = collectFromList(IntegratedDemonlist::aredl, levelID, " MSCL", true);
+        if (!r.positions.empty()) return r;
+    }
+    if (auto r = collectFromList(IntegratedDemonlist::aredlOfficial, levelID, " AREDL", false); !r.positions.empty()) return r;
+    if (auto r = collectFromList(IntegratedDemonlist::challengeList, levelID, " CL",    false); !r.positions.empty()) return r;
+    if (auto r = collectFromList(IntegratedDemonlist::allList,       levelID, " ALL",   false); !r.positions.empty()) return r;
+    return {};
 }
 
 class $modify(IDLevelCell, LevelCell) {
@@ -37,84 +82,54 @@ class $modify(IDLevelCell, LevelCell) {
         if (level->m_levelType == GJLevelType::Editor) return;
 
         auto levelID = level->m_levelID.value();
-        auto difficulty = level->m_demonDifficulty;
-        bool isRatedDemon = level->m_demon.value() > 0 && difficulty >= 6;
-
+        bool isRatedDemon = level->m_demon.value() > 0 && level->m_demonDifficulty >= 6;
         bool showMscl = Mod::get()->getSettingValue<bool>("show-mscl");
-        if (isRatedDemon) {
-            std::vector<int> positions;
-            if (showMscl) {
-                for (auto& demon : IntegratedDemonlist::aredl) {
-                    if (demon.id == levelID) positions.push_back(demon.position);
-                }
-                if (!positions.empty()) return addRank(positions);
-            }
 
-            for (auto& demon : IntegratedDemonlist::aredlOfficial) {
-                if (demon.id == levelID) { positions.push_back(demon.position); break; }
-            }
-            if (!positions.empty()) return addRankAREDL(positions);
+        int tier = findTierAcrossLists(levelID);
+        auto rank = findRank(levelID, showMscl);
 
-            for (auto& demon : IntegratedDemonlist::challengeList) {
-                if (demon.id == levelID) { positions.push_back(demon.position); break; }
-            }
-            if (!positions.empty()) return addRankCL(positions);
+        if (!rank.positions.empty()) {
+            addRankWithLabel(rank.positions, rank.label, tier);
+        } else if (tier >= 0) {
+            addTierSprite(tier);
+        }
 
-            for (auto& demon : IntegratedDemonlist::allList) {
-                if (demon.id == levelID) return addRankALL({ demon.position });
-            }
+        if (!isRatedDemon && tier > 0) {
+            updateDiffSpriteForTier(tier);
+        }
 
-            if (!showMscl) return;
+        // Rated demon not in any cached list — fetch from MSCL API if enabled.
+        if (isRatedDemon && rank.positions.empty() && showMscl) {
             if (loadedDemons.contains(levelID)) return;
             loadedDemons.insert(levelID);
 
             m_fields->m_listener.spawn(
                 web::WebRequest().get(
                     fmt::format("https://list-production-2b7d.up.railway.app/api/v2/demons/?level_id={}&limit=1", levelID)),
-                [this, levelID, levelName = std::string(level->m_levelName)](
-                    web::WebResponse res
-                ) mutable {
+                [this, levelID, levelName = std::string(level->m_levelName)](web::WebResponse res) mutable {
                     if (!res.ok()) return;
 
-                    int position1 = -1;
-                    int tier1 = -1;
+                    int position = -1;
+                    int fetchedTier = -1;
                     for (auto& d : jasmine::web::getArray(res)) {
                         auto pos = d.get<int>("position");
                         if (!pos.isOk()) continue;
-                        position1 = pos.unwrap();
+                        position = pos.unwrap();
                         auto t = d.get<int>("tier");
-                        if (t.isOk()) tier1 = t.unwrap();
+                        if (t.isOk()) fetchedTier = t.unwrap();
                         break;
                     }
-                    if (position1 == -1) return;
+                    if (position == -1) return;
 
-                    IDListDemon demon(levelID, position1, levelName);
-                    demon.tier = tier1;
+                    IDListDemon demon(levelID, position, levelName);
+                    demon.tier = fetchedTier;
                     if (!std::ranges::contains(IntegratedDemonlist::aredl, demon)) {
                         IntegratedDemonlist::aredl.push_back(std::move(demon));
                     }
 
-                    addRank({ position1 });
+                    addRankWithLabel({ position }, " MSCL", fetchedTier);
                 }
             );
-        } else {
-            // Unrated level — change difficulty icon if it has a valid tier in any demonlist
-            int tier = -1;
-            if (showMscl) {
-                for (auto& demon : IntegratedDemonlist::aredl) {
-                    if (demon.id == levelID) { tier = demon.tier; break; }
-                }
-            }
-            if (tier <= 0) for (auto& demon : IntegratedDemonlist::aredlOfficial) {
-                if (demon.id == levelID) { tier = demon.tier; break; }
-            }
-            if (tier <= 0) for (auto& demon : IntegratedDemonlist::challengeList) {
-                if (demon.id == levelID) { tier = demon.tier; break; }
-            }
-            if (tier <= 0) for (auto& demon : IntegratedDemonlist::allList) {
-                if (demon.id == levelID) { tier = demon.tier; break; }
-            }
-            if (tier > 0) updateDiffSpriteForTier(tier);
         }
     }
 
@@ -124,23 +139,23 @@ class $modify(IDLevelCell, LevelCell) {
         diffSpr->updateDifficultyFrame((int)difficultyForTier(tier), GJDifficultyName::Short);
     }
 
-    void addRankALL(const std::vector<int>& positions) {
-        addRankWithLabel(positions, " ALL");
+    void addTierSprite(int tier) {
+        if (tier < 0) return;
+        if (m_mainLayer->getChildByID("level-tier-icon"_spr)) return;
+
+        auto tierPath = (Mod::get()->getResourcesDir() / fmt::format("{}-uhd.png", tier)).string();
+        auto tierSpr = CCSprite::create(tierPath.c_str());
+        if (!tierSpr) return;
+
+        tierSpr->setScale(m_compactView ? 0.22f : 0.28f);
+        tierSpr->setAnchorPoint({ 1.0f, 1.0f });
+        tierSpr->setPosition({ 352.0f, m_compactView ? 38.0f : 84.0f });
+        tierSpr->setID("level-tier-icon"_spr);
+        m_mainLayer->addChild(tierSpr, 10);
     }
 
-    void addRankAREDL(const std::vector<int>& positions) {
-        addRankWithLabel(positions, " AREDL");
-    }
-
-    void addRankCL(const std::vector<int>& positions) {
-        addRankWithLabel(positions, " CL");
-    }
-
-    void addRank(const std::vector<int>& positions) {
-        addRankWithLabel(positions, " MSCL");
-    }
-
-    void addRankWithLabel(const std::vector<int>& positions, const char* listName) {
+    void addRankWithLabel(const std::vector<int>& positions, const char* listName, int tier) {
+        addTierSprite(tier);
         if (m_mainLayer->getChildByID("level-rank-label"_spr)) return;
 
         auto dailyLevel = m_level->m_dailyID.value() > 0;
